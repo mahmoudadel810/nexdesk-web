@@ -30,7 +30,8 @@
     "mainMenu": "Main menu",
     "pricing": "Pricing",
     "tickets": "Tickets",
-    "customFields": "Custom fields"
+    "customFields": "Custom fields",
+    "sla": "SLA"
   },
   "roles": {
     "Owner": "Owner",
@@ -46,7 +47,9 @@
     "passwordStrength": "Include at least one letter and one digit.",
     "passwordMismatch": "The passwords do not match.",
     "invalid": "This value is not valid.",
-    "server": "This value was rejected."
+    "server": "This value was rejected.",
+    "min": "Enter {{min}} or more.",
+    "max": "Enter {{max}} or less."
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -94,7 +97,9 @@
     "custom-field-key-taken": "A field with this key already exists.",
     "custom-field-limit": "A workspace can have at most 30 custom fields.",
     "view-not-found": "This view no longer exists.",
-    "shared-views-restricted": "Only admins can create or change views shared with everyone."
+    "shared-views-restricted": "Only admins can create or change views shared with everyone.",
+    "holiday-not-found": "This holiday no longer exists.",
+    "holiday-exists": "A holiday is already defined for this date."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -430,7 +435,8 @@
       "-createdAt": "Newest first",
       "createdAt": "Oldest first",
       "-priority": "Highest priority",
-      "number": "Ticket number"
+      "number": "Ticket number",
+      "due": "Soonest deadline"
     },
     "tags": {
       "placeholder": "Add a tag…",
@@ -503,7 +509,8 @@
         "TagsChanged": "{{actor}} changed the tags from {{from}} to {{to}}",
         "CustomFieldChanged": "{{actor}} changed {{field}} from {{from}} to {{to}}",
         "MergedInto": "{{actor}} merged this ticket into {{to}}",
-        "MergedFrom": "{{actor}} merged ticket {{to}} into this one"
+        "MergedFrom": "{{actor}} merged ticket {{to}} into this one",
+        "SlaBreached": "The {{to}} deadline was missed"
       }
     },
     "search": "Search subject, messages, requester or #number",
@@ -581,6 +588,61 @@
       "Dropdown": "Dropdown",
       "Checkbox": "Checkbox",
       "Date": "Date"
+    }
+  },
+  "sla": {
+    "column": "SLA",
+    "escalated": "Escalated after a missed deadline",
+    "metrics": {
+      "firstResponse": "First response",
+      "resolution": "Resolution"
+    },
+    "metricNames": {
+      "FirstResponse": "first response",
+      "Resolution": "resolution"
+    },
+    "states": {
+      "breached": "overdue",
+      "soon": "due {{when}}",
+      "ok": "due {{when}}",
+      "met": "done in time",
+      "paused": "paused"
+    },
+    "filters": {
+      "any": "Any",
+      "AtRisk": "Due soon",
+      "Breached": "Missed a deadline"
+    }
+  },
+  "slaSettings": {
+    "title": "SLA settings",
+    "subtitle": "How quickly your team promises to answer and solve tickets, and when the clock runs.",
+    "units": {
+      "hours": "h",
+      "minutes": "min"
+    },
+    "targets": {
+      "title": "Targets by priority",
+      "subtitle": "Counted in working minutes. Open tickets pick up new targets the next time they change.",
+      "firstResponse": "First response",
+      "resolution": "Resolution",
+      "minutes": "Minutes",
+      "orderError": "A resolution target cannot be shorter than its first-response target.",
+      "saved": "SLA targets saved."
+    },
+    "hours": {
+      "title": "Business hours",
+      "subtitle": "SLA clocks only run during these hours, in the time zone of the workspace.",
+      "saved": "Business hours saved."
+    },
+    "holidays": {
+      "title": "Holidays",
+      "subtitle": "Days on which the workspace is closed and SLA clocks stand still.",
+      "date": "Date",
+      "name": "Name",
+      "add": "Add holiday",
+      "remove": "Remove {{name}}",
+      "empty": "No holidays defined."
     }
   }
 }
