@@ -54,6 +54,68 @@ export interface TicketDetail extends TicketListItem {
   readonly closedAt: string | null;
   readonly watchers: readonly PersonRef[];
   readonly isWatching: boolean;
+  readonly customFields: Readonly<Record<string, string>>;
+  readonly mergedInto: {
+    readonly id: string;
+    readonly number: number;
+    readonly subject: string;
+  } | null;
+  readonly version: number;
+}
+
+export type CustomFieldType = 'Text' | 'Number' | 'Dropdown' | 'Checkbox' | 'Date';
+
+export const CUSTOM_FIELD_TYPES: readonly CustomFieldType[] = [
+  'Text',
+  'Number',
+  'Dropdown',
+  'Checkbox',
+  'Date',
+];
+
+export interface CustomField {
+  readonly id: string;
+  readonly key: string;
+  readonly label: string;
+  readonly type: CustomFieldType;
+  readonly options: readonly string[];
+  readonly isRequired: boolean;
+  readonly isActive: boolean;
+  readonly position: number;
+}
+
+export type CustomFieldValues = Readonly<Record<string, string | null>>;
+
+/** The ticket list filter as a saved view stores it. Assignee is "me", "unassigned" or a user id. */
+export interface ViewFilter {
+  readonly status: readonly TicketStatus[] | null;
+  readonly priority: readonly TicketPriority[] | null;
+  readonly assignee: string | null;
+  readonly teamId: string | null;
+  readonly tag: string | null;
+  readonly search: string | null;
+  readonly sort: string | null;
+}
+
+export interface SavedView {
+  readonly id: string;
+  readonly name: string;
+  readonly isShared: boolean;
+  readonly isMine: boolean;
+  readonly filter: ViewFilter;
+}
+
+export interface BulkChanges {
+  readonly status?: TicketStatus;
+  readonly priority?: TicketPriority;
+  readonly setAssignee?: boolean;
+  readonly assigneeId?: string | null;
+  readonly addTags?: readonly string[];
+}
+
+export interface BulkResult {
+  readonly updated: number;
+  readonly failed: readonly { readonly ticketId: string; readonly code: string }[];
 }
 
 export interface Attachment {
@@ -73,7 +135,10 @@ export type TicketEventType =
   | 'TypeChanged'
   | 'AssigneeChanged'
   | 'TeamChanged'
-  | 'TagsChanged';
+  | 'TagsChanged'
+  | 'CustomFieldChanged'
+  | 'MergedInto'
+  | 'MergedFrom';
 
 export interface TimelineItem {
   readonly id: string;
@@ -88,6 +153,7 @@ export interface TimelineItem {
   readonly isInternal: boolean;
   readonly attachments: readonly Attachment[];
   readonly eventType: TicketEventType | null;
+  readonly field: string | null;
   readonly oldValue: string | null;
   readonly newValue: string | null;
 }
@@ -99,6 +165,7 @@ export interface TicketFilter {
   readonly unassigned?: boolean;
   readonly teamId?: string | null;
   readonly tag?: string;
+  readonly search?: string;
   readonly sort?: string;
   readonly page: number;
   readonly pageSize: number;
@@ -115,6 +182,7 @@ export interface NewTicket {
   readonly teamId: string | null;
   readonly tags: readonly string[];
   readonly attachmentIds: readonly string[];
+  readonly customFields: CustomFieldValues;
 }
 
 export interface TicketChanges {
@@ -123,6 +191,7 @@ export interface TicketChanges {
   readonly priority?: TicketPriority;
   readonly type?: TicketType;
   readonly tags?: readonly string[];
+  readonly customFields?: CustomFieldValues;
 }
 
 export interface NewMessage {
@@ -173,6 +242,10 @@ export class TicketsApi {
       params = params.set('tag', filter.tag);
     }
 
+    if (filter.search) {
+      params = params.set('search', filter.search);
+    }
+
     if (filter.sort) {
       params = params.set('sort', filter.sort);
     }
@@ -192,19 +265,61 @@ export class TicketsApi {
     return this.http.post<TicketDetail>(`${API}/tickets`, ticket, inline());
   }
 
-  update(ticketId: string, changes: TicketChanges): Observable<TicketDetail> {
-    return this.http.patch<TicketDetail>(`${API}/tickets/${ticketId}`, changes);
+  /** Sends the version the caller last saw, so the API rejects the change if the ticket moved on. */
+  update(ticketId: string, changes: TicketChanges, version: number): Observable<TicketDetail> {
+    return this.http.patch<TicketDetail>(`${API}/tickets/${ticketId}`, { ...changes, version });
   }
 
   assign(
     ticketId: string,
     assigneeId: string | null,
     teamId: string | null,
+    version: number,
   ): Observable<TicketDetail> {
     return this.http.put<TicketDetail>(`${API}/tickets/${ticketId}/assignment`, {
       assigneeId,
       teamId,
+      version,
     });
+  }
+
+  bulk(ticketIds: readonly string[], changes: BulkChanges): Observable<BulkResult> {
+    return this.http.post<BulkResult>(`${API}/tickets/bulk`, { ticketIds, ...changes });
+  }
+
+  merge(ticketId: string, targetTicketId: string): Observable<TicketDetail> {
+    return this.http.post<TicketDetail>(`${API}/tickets/${ticketId}/merge`, { targetTicketId });
+  }
+
+  customFields(): Observable<CustomField[]> {
+    return this.http.get<CustomField[]>(`${API}/custom-fields`);
+  }
+
+  createCustomField(field: Omit<CustomField, 'id' | 'isActive'>): Observable<CustomField> {
+    return this.http.post<CustomField>(`${API}/custom-fields`, field, inline());
+  }
+
+  updateCustomField(
+    fieldId: string,
+    field: Omit<CustomField, 'id' | 'key' | 'type'>,
+  ): Observable<CustomField> {
+    return this.http.put<CustomField>(`${API}/custom-fields/${fieldId}`, field, inline());
+  }
+
+  deleteCustomField(fieldId: string): Observable<void> {
+    return this.http.delete<void>(`${API}/custom-fields/${fieldId}`);
+  }
+
+  views(): Observable<SavedView[]> {
+    return this.http.get<SavedView[]>(`${API}/views`);
+  }
+
+  createView(name: string, isShared: boolean, filter: ViewFilter): Observable<SavedView> {
+    return this.http.post<SavedView>(`${API}/views`, { name, isShared, filter }, inline());
+  }
+
+  deleteView(viewId: string): Observable<void> {
+    return this.http.delete<void>(`${API}/views/${viewId}`);
   }
 
   addMessage(ticketId: string, message: NewMessage): Observable<TicketDetail> {
