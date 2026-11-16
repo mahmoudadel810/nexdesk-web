@@ -101,6 +101,13 @@ export const routes: Routes = [
         title: 'NexDesk',
       },
       {
+        path: 'settings/custom-fields',
+        canActivate: [permissionGuard('custom-fields.manage')],
+        loadComponent: () =>
+          import('./features/settings/custom-fields').then((m) => m.CustomFields),
+        title: 'NexDesk',
+      },
+      {
         path: 'profile',
         loadComponent: () => import('./features/profile/profile').then((m) => m.Profile),
         title: 'NexDesk',
