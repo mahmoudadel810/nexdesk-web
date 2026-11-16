@@ -1,5 +1,12 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -15,6 +22,8 @@ import { map } from 'rxjs';
 import { AVAILABILITIES, Availability, UsersApi } from '../core/api/workspace.api';
 import { AuthService } from '../core/auth/auth.service';
 import { TranslatedPaginatorIntl } from '../core/i18n/paginator-intl';
+import { RealtimeService } from '../core/realtime/realtime.service';
+import { NotificationBell } from './notification-bell';
 import { PreferencesControls } from './preferences-controls';
 
 interface NavItem {
@@ -56,6 +65,7 @@ const NAV_ITEMS: readonly NavItem[] = [
     MatMenuModule,
     MatSidenavModule,
     MatToolbarModule,
+    NotificationBell,
     PreferencesControls,
     RouterLink,
     RouterLinkActive,
@@ -83,6 +93,7 @@ const NAV_ITEMS: readonly NavItem[] = [
         <span class="workspace">{{ tenant.name }}</span>
       }
       <span class="spacer"></span>
+      <app-notification-bell />
       <app-preferences-controls />
       <button
         mat-icon-button
@@ -282,6 +293,7 @@ export class AppShell {
   protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly usersApi = inject(UsersApi);
+  private readonly realtime = inject(RealtimeService);
 
   protected readonly availabilities = AVAILABILITIES;
   protected readonly availability = signal<Availability>('Offline');
@@ -307,6 +319,9 @@ export class AppShell {
   );
 
   constructor() {
+    void this.realtime.start();
+    inject(DestroyRef).onDestroy(() => void this.realtime.stop());
+
     const userId = this.auth.session()?.user.id;
     if (userId) {
       this.usersApi.get(userId).subscribe((user) => {

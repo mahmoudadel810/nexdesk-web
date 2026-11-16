@@ -99,7 +99,8 @@
     "view-not-found": "This view no longer exists.",
     "shared-views-restricted": "Only admins can create or change views shared with everyone.",
     "holiday-not-found": "This holiday no longer exists.",
-    "holiday-exists": "A holiday is already defined for this date."
+    "holiday-exists": "A holiday is already defined for this date.",
+    "notification-not-found": "This notification no longer exists."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -378,6 +379,20 @@
       "current": "Current password",
       "submit": "Change password",
       "changed": "Password changed."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Choose what you want to hear about, and where.",
+      "event": "When",
+      "inApp": "In the app",
+      "email": "By email",
+      "types": {
+        "TicketAssigned": "A ticket is assigned to me",
+        "TicketReply": "Someone replies on a ticket I follow",
+        "TicketNote": "Someone adds an internal note on a ticket I follow",
+        "SlaWarning": "A deadline of my ticket is close",
+        "SlaBreach": "A deadline is missed"
+      }
     }
   },
   "ticketStatus": {
@@ -643,6 +658,20 @@
       "add": "Add holiday",
       "remove": "Remove {{name}}",
       "empty": "No holidays defined."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "open": "Notifications, {{count}} unread",
+    "markAllRead": "Mark all as read",
+    "empty": "You are all caught up.",
+    "someone": "Someone",
+    "types": {
+      "TicketAssigned": "{{actor}} assigned ticket #{{number}} to you",
+      "TicketReply": "{{actor}} replied on ticket #{{number}}",
+      "TicketNote": "{{actor}} added a note on ticket #{{number}}",
+      "SlaWarning": "Ticket #{{number}} is close to its {{metric}} deadline",
+      "SlaBreach": "Ticket #{{number}} missed its {{metric}} deadline"
     }
   }
 }

@@ -13,6 +13,7 @@ const REFRESH_LOCK = 'nexdesk.refresh';
 
 interface AuthState {
   readonly accessToken: string;
+  readonly expiresAt: number;
   readonly session: Session;
 }
 
@@ -29,6 +30,12 @@ export class AuthService {
 
   /** Address of a just-registered account that still has to confirm its email. */
   readonly pendingVerificationEmail = signal<string | null>(null);
+
+  /** True when there is no access token or it expires within the given time. */
+  accessTokenExpiresWithin(milliseconds: number): boolean {
+    const state = this.state();
+    return !state || state.expiresAt - Date.now() <= milliseconds;
+  }
 
   can(permission: string): boolean {
     return this.permissions().has(permission);
@@ -159,7 +166,11 @@ export class AuthService {
   }
 
   private accept(response: AuthResponse): Session {
-    this.state.set({ accessToken: response.accessToken, session: response.session });
+    this.state.set({
+      accessToken: response.accessToken,
+      expiresAt: Date.parse(response.expiresAt),
+      session: response.session,
+    });
     writeStored(SESSION_HINT_KEY, '1');
     return response.session;
   }

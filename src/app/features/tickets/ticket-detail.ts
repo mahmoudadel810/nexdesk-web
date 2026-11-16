@@ -8,6 +8,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -21,7 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { Observable, filter, switchMap } from 'rxjs';
+import { Observable, debounceTime, filter, switchMap } from 'rxjs';
 import {
   Attachment,
   TICKET_PRIORITIES,
@@ -36,6 +37,7 @@ import {
 } from '../../core/api/tickets.api';
 import { Team, TeamsApi, User, UsersApi } from '../../core/api/workspace.api';
 import { AuthService } from '../../core/auth/auth.service';
+import { RealtimeService } from '../../core/realtime/realtime.service';
 import { toProblem } from '../../core/http/problem';
 import { Notifier } from '../../core/ui/notifier';
 import { Confirm } from '../../shared/confirm-dialog';
@@ -525,6 +527,19 @@ export class TicketDetail {
       untracked(() => this.load(id));
     });
 
+    // Another agent or the customer touched this ticket: show their change without a manual reload.
+    inject(RealtimeService)
+      .ticketChanges.pipe(
+        filter((change) => change.ticketId === this.id()),
+        debounceTime(400),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => {
+        if (!this.sending()) {
+          this.refresh(this.id());
+        }
+      });
+
     inject(UsersApi)
       .list({ isActive: true, page: 1, pageSize: 100 })
       .subscribe((users) => this.agents.set(users.items.filter((user) => user.role !== 'Viewer')));
@@ -649,6 +664,17 @@ export class TicketDetail {
         this.ticket.set(null);
         this.missing.set(true);
       },
+    });
+  }
+
+  /** Reloads quietly: a failure leaves what is on screen instead of replacing it with an error. */
+  private refresh(id: string): void {
+    this.api.get(id).subscribe({
+      next: (ticket) => {
+        this.ticket.set(ticket);
+        this.loadTimeline(id);
+      },
+      error: () => undefined,
     });
   }
 

@@ -16,6 +16,11 @@ export class Notifier {
     this.open(this.translate(key, params), 4000);
   }
 
+  /** Shows text that is already translated. */
+  message(text: string): void {
+    this.open(text, 5000);
+  }
+
   problem(problem: Problem): void {
     this.open(this.problemMessage(problem), 7000);
   }
