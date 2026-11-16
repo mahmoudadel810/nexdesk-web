@@ -65,6 +65,30 @@ export const routes: Routes = [
         title: 'NexDesk',
       },
       {
+        path: 'tickets',
+        canActivate: [permissionGuard('tickets.view')],
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            loadComponent: () => import('./features/tickets/tickets').then((m) => m.Tickets),
+            title: 'NexDesk',
+          },
+          {
+            path: 'new',
+            canActivate: [permissionGuard('tickets.create')],
+            loadComponent: () => import('./features/tickets/ticket-new').then((m) => m.TicketNew),
+            title: 'NexDesk',
+          },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./features/tickets/ticket-detail').then((m) => m.TicketDetail),
+            title: 'NexDesk',
+          },
+        ],
+      },
+      {
         path: 'users',
         canActivate: [permissionGuard('users.view')],
         loadComponent: () => import('./features/users/users').then((m) => m.Users),

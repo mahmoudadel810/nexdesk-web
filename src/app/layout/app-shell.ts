@@ -27,6 +27,12 @@ interface NavItem {
 
 const NAV_ITEMS: readonly NavItem[] = [
   { path: '/app', icon: 'space_dashboard', label: 'nav.dashboard', exact: true },
+  {
+    path: '/app/tickets',
+    icon: 'confirmation_number',
+    label: 'nav.tickets',
+    permission: 'tickets.view',
+  },
   { path: '/app/users', icon: 'group', label: 'nav.users', permission: 'users.view' },
   { path: '/app/teams', icon: 'diversity_3', label: 'nav.teams', permission: 'users.view' },
 ];
@@ -162,6 +168,7 @@ const NAV_ITEMS: readonly NavItem[] = [
     .header {
       flex: 0 0 auto;
       gap: 8px;
+      min-inline-size: 0;
       border-block-end: 1px solid var(--mat-sys-outline-variant);
     }
 
@@ -251,6 +258,10 @@ const NAV_ITEMS: readonly NavItem[] = [
 
     @media (max-width: 600px) {
       .workspace {
+        display: none;
+      }
+
+      .brand span {
         display: none;
       }
 

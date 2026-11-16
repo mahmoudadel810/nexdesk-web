@@ -185,3 +185,60 @@ body {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font: var(--mat-sys-label-medium);
+  white-space: nowrap;
+  background: var(--mat-sys-surface-container-highest);
+  color: var(--mat-sys-on-surface-variant);
+
+  &[data-status='New'] {
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+  }
+
+  &[data-status='Open'] {
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+  }
+
+  &[data-status='Pending'],
+  &[data-status='OnHold'] {
+    background: var(--mat-sys-tertiary-container);
+    color: var(--mat-sys-on-tertiary-container);
+  }
+
+  &[data-status='Solved'] {
+    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
+}
+
+.priority {
+  white-space: nowrap;
+
+  &[data-priority='High'] {
+    font-weight: 500;
+  }
+
+  &[data-priority='Urgent'] {
+    color: var(--mat-sys-error);
+    font-weight: 600;
+  }
+
+  &[data-priority='Low'] {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-label-small);
+}
