@@ -27,6 +27,14 @@ export function fieldError(control: AbstractControl | null): FieldError | null {
     return { key: 'validation.minLength', params: { min: errors['minlength'].requiredLength } };
   }
 
+  if (errors['min']) {
+    return { key: 'validation.min', params: { min: errors['min'].min } };
+  }
+
+  if (errors['max']) {
+    return { key: 'validation.max', params: { max: errors['max'].max } };
+  }
+
   if (errors['maxlength']) {
     return { key: 'validation.maxLength', params: { max: errors['maxlength'].requiredLength } };
   }

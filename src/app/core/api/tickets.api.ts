@@ -32,6 +32,19 @@ export interface TeamRef {
   readonly name: string;
 }
 
+/** Deadlines of a ticket. A due date is null when no policy applies or the clock is paused. */
+export interface TicketSla {
+  readonly firstResponseDueAt: string | null;
+  readonly firstResponseBreached: boolean;
+  readonly firstResponseMet: boolean;
+  readonly resolutionDueAt: string | null;
+  readonly resolutionBreached: boolean;
+  readonly isPaused: boolean;
+  readonly isEscalated: boolean;
+}
+
+export type SlaFilter = 'Breached' | 'AtRisk';
+
 export interface TicketListItem {
   readonly id: string;
   readonly number: number;
@@ -46,6 +59,7 @@ export interface TicketListItem {
   readonly tags: readonly string[];
   readonly createdAt: string;
   readonly lastActivityAt: string;
+  readonly sla: TicketSla;
 }
 
 export interface TicketDetail extends TicketListItem {
@@ -138,7 +152,8 @@ export type TicketEventType =
   | 'TagsChanged'
   | 'CustomFieldChanged'
   | 'MergedInto'
-  | 'MergedFrom';
+  | 'MergedFrom'
+  | 'SlaBreached';
 
 export interface TimelineItem {
   readonly id: string;
@@ -166,6 +181,7 @@ export interface TicketFilter {
   readonly teamId?: string | null;
   readonly tag?: string;
   readonly search?: string;
+  readonly sla?: SlaFilter | null;
   readonly sort?: string;
   readonly page: number;
   readonly pageSize: number;
@@ -244,6 +260,10 @@ export class TicketsApi {
 
     if (filter.search) {
       params = params.set('search', filter.search);
+    }
+
+    if (filter.sla) {
+      params = params.set('sla', filter.sla);
     }
 
     if (filter.sort) {

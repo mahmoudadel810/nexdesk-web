@@ -6,6 +6,7 @@ import { FileSizePipe } from '../../shared/file-size.pipe';
 import { LocalDatePipe } from '../../shared/local-date.pipe';
 
 const TRANSLATED_VALUES: Partial<Record<string, string>> = {
+  SlaBreached: 'sla.metricNames',
   StatusChanged: 'ticketStatus',
   PriorityChanged: 'ticketPriority',
   TypeChanged: 'ticketType',
@@ -198,6 +199,8 @@ export class TicketTimeline {
       case 'MergedInto':
       case 'MergedFrom':
         return 'merge';
+      case 'SlaBreached':
+        return 'error';
       default:
         return 'edit';
     }

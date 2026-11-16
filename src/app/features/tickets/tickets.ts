@@ -17,6 +17,7 @@ import { Subject, debounceTime, distinctUntilChanged, filter, switchMap } from '
 import {
   BulkChanges,
   SavedView,
+  SlaFilter,
   TICKET_PRIORITIES,
   TICKET_STATUSES,
   TicketListItem,
@@ -31,12 +32,13 @@ import { Notifier } from '../../core/ui/notifier';
 import { Confirm } from '../../shared/confirm-dialog';
 import { LocalDatePipe } from '../../shared/local-date.pipe';
 import { Prompt } from '../../shared/prompt-dialog';
+import { SlaStatus } from '../../shared/sla-status';
 import { SaveViewDialog, SaveViewDialogData } from './save-view-dialog';
 import { normalizeTag } from './tag-input';
 
 type AssigneeFilter = 'anyone' | 'me' | 'unassigned' | string;
 
-const SORTS = ['-lastActivityAt', '-createdAt', 'createdAt', '-priority', 'number'] as const;
+const SORTS = ['-lastActivityAt', 'due', '-createdAt', 'createdAt', '-priority', 'number'] as const;
 const DEFAULT_STATUSES: readonly TicketStatus[] = ['New', 'Open', 'Pending', 'OnHold'];
 const DEFAULT_SORT = '-lastActivityAt';
 
@@ -56,6 +58,7 @@ const DEFAULT_SORT = '-lastActivityAt';
     MatSelectModule,
     MatTableModule,
     RouterLink,
+    SlaStatus,
     TranslocoPipe,
   ],
   template: `
@@ -152,6 +155,14 @@ const DEFAULT_SORT = '-lastActivityAt';
           @for (team of teams(); track team.id) {
             <mat-option [value]="team.id">{{ team.name }}</mat-option>
           }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>{{ 'sla.column' | transloco }}</mat-label>
+        <mat-select [value]="sla()" (valueChange)="sla.set($event); changed()">
+          <mat-option [value]="null">{{ 'sla.filters.any' | transloco }}</mat-option>
+          <mat-option value="AtRisk">{{ 'sla.filters.AtRisk' | transloco }}</mat-option>
+          <mat-option value="Breached">{{ 'sla.filters.Breached' | transloco }}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
@@ -283,6 +294,12 @@ const DEFAULT_SORT = '-lastActivityAt';
             }
           </td>
         </ng-container>
+        <ng-container matColumnDef="sla">
+          <th mat-header-cell *matHeaderCellDef>{{ 'sla.column' | transloco }}</th>
+          <td mat-cell *matCellDef="let ticket">
+            <app-sla-status [sla]="ticket.sla" [status]="ticket.status" compact />
+          </td>
+        </ng-container>
         <ng-container matColumnDef="activity">
           <th mat-header-cell *matHeaderCellDef>{{ 'tickets.fields.lastActivity' | transloco }}</th>
           <td mat-cell *matCellDef="let ticket">
@@ -410,6 +427,7 @@ export class Tickets {
   protected readonly priorities = signal<readonly TicketPriority[]>([]);
   protected readonly assignee = signal<AssigneeFilter>('anyone');
   protected readonly teamId = signal<string | null>(null);
+  protected readonly sla = signal<SlaFilter | null>(null);
   protected readonly sort = signal<string>(DEFAULT_SORT);
   protected readonly page = signal(1);
   protected readonly pageSize = signal(25);
@@ -434,6 +452,7 @@ export class Tickets {
     'status',
     'priority',
     'assignee',
+    'sla',
     'activity',
   ]);
   protected readonly allSelected = computed(
@@ -464,6 +483,7 @@ export class Tickets {
                   ? null
                   : assignee,
             teamId: this.teamId(),
+            sla: this.sla(),
             sort: this.sort(),
             page: this.page(),
             pageSize: this.pageSize(),
