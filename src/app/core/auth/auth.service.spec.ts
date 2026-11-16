@@ -4,6 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { authResponse } from './auth-testing';
 import { AuthService } from './auth.service';
 
+const settle = () => new Promise<void>((resolve) => setTimeout(resolve));
+
 describe('AuthService', () => {
   let auth: AuthService;
   let http: HttpTestingController;
@@ -41,23 +43,26 @@ describe('AuthService', () => {
     expect(auth.can('billing.manage')).toBe(false);
   });
 
-  it('shares one refresh request between concurrent callers', () => {
+  it('shares one refresh request between concurrent callers', async () => {
     const tokens: string[] = [];
     auth.refresh().subscribe((token) => tokens.push(token));
     auth.refresh().subscribe((token) => tokens.push(token));
 
     http.expectOne('/api/v1/auth/refresh').flush(authResponse('token-2'));
+    await settle();
 
     expect(tokens).toEqual(['token-2', 'token-2']);
     expect(auth.accessToken()).toBe('token-2');
   });
 
-  it('starts a new refresh once the previous one has finished', () => {
+  it('starts a new refresh once the previous one has finished', async () => {
     auth.refresh().subscribe();
     http.expectOne('/api/v1/auth/refresh').flush(authResponse('token-2'));
+    await settle();
 
     auth.refresh().subscribe();
     http.expectOne('/api/v1/auth/refresh').flush(authResponse('token-3'));
+    await settle();
 
     expect(auth.accessToken()).toBe('token-3');
   });
@@ -90,6 +95,48 @@ describe('AuthService', () => {
 
     expect(auth.isAuthenticated()).toBe(false);
     expect(localStorage.getItem('nexdesk.session')).toBeNull();
+  });
+
+  it('keeps the sign-in hint when the server cannot be reached or is failing', async () => {
+    localStorage.setItem('nexdesk.session', '1');
+
+    const restoring = auth.restore();
+    http
+      .expectOne('/api/v1/auth/refresh')
+      .flush(null, { status: 503, statusText: 'Service Unavailable' });
+    await restoring;
+
+    expect(auth.isAuthenticated()).toBe(false);
+    expect(localStorage.getItem('nexdesk.session')).toBe('1');
+  });
+
+  it('takes a cross-tab lock while rotating the refresh cookie', async () => {
+    const lockNames: string[] = [];
+    const original = Object.getOwnPropertyDescriptor(globalThis.navigator, 'locks');
+    Object.defineProperty(globalThis.navigator, 'locks', {
+      configurable: true,
+      value: {
+        request: <T>(name: string, callback: () => Promise<T>) => {
+          lockNames.push(name);
+          return callback();
+        },
+      },
+    });
+
+    try {
+      auth.refresh().subscribe();
+      http.expectOne('/api/v1/auth/refresh').flush(authResponse('token-2'));
+      await settle();
+    } finally {
+      if (original) {
+        Object.defineProperty(globalThis.navigator, 'locks', original);
+      } else {
+        Reflect.deleteProperty(globalThis.navigator, 'locks');
+      }
+    }
+
+    expect(lockNames).toEqual(['nexdesk.refresh']);
+    expect(auth.accessToken()).toBe('token-2');
   });
 
   it('clears the session on logout even when the request fails', () => {

@@ -9,6 +9,8 @@ import { authInterceptor, errorInterceptor, loadingInterceptor } from './interce
 import { LoadingService } from './loading.service';
 import { Problem, SKIP_ERROR_TOAST } from './problem';
 
+const settle = () => new Promise<void>((resolve) => setTimeout(resolve));
+
 describe('HTTP interceptors', () => {
   let http: HttpClient;
   let backend: HttpTestingController;
@@ -63,7 +65,7 @@ describe('HTTP interceptors', () => {
     expect(backend.expectOne('/i18n/en.json').request.headers.has('Authorization')).toBe(false);
   });
 
-  it('refreshes once and replays every request that got a 401', () => {
+  it('refreshes once and replays every request that got a 401', async () => {
     signIn();
     const results: unknown[] = [];
 
@@ -73,6 +75,7 @@ describe('HTTP interceptors', () => {
     backend.expectOne('/api/v1/teams').flush(null, { status: 401, statusText: 'Unauthorized' });
 
     backend.expectOne('/api/v1/auth/refresh').flush(authResponse('token-2'));
+    await settle();
 
     const tickets = backend.expectOne('/api/v1/tickets');
     const teams = backend.expectOne('/api/v1/teams');
@@ -85,7 +88,7 @@ describe('HTTP interceptors', () => {
     expect(problems).toEqual([]);
   });
 
-  it('signs out and returns to the login page when the refresh fails', () => {
+  it('signs out and returns to the login page when the refresh fails', async () => {
     signIn();
     let failed = false;
 
@@ -94,6 +97,7 @@ describe('HTTP interceptors', () => {
     backend
       .expectOne('/api/v1/auth/refresh')
       .flush({ code: 'invalid-refresh-token' }, { status: 401, statusText: 'Unauthorized' });
+    await settle();
 
     expect(failed).toBe(true);
     expect(auth.isAuthenticated()).toBe(false);
