@@ -115,6 +115,31 @@ export class AuthService {
       .pipe(finalize(() => this.clear()));
   }
 
+  acceptInvitation(token: string, fullName: string, password: string): Observable<Session> {
+    return this.http
+      .post<AuthResponse>(
+        `${environment.apiUrl}/invitations/accept`,
+        { token, fullName, password },
+        { context: selfHandled() },
+      )
+      .pipe(map((response) => this.accept(response)));
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<Session> {
+    return this.http
+      .post<AuthResponse>(
+        `${environment.apiUrl}/users/me/change-password`,
+        { currentPassword, newPassword },
+        { context: new HttpContext().set(SKIP_ERROR_TOAST, true) },
+      )
+      .pipe(map((response) => this.accept(response)));
+  }
+
+  /** Replaces the cached session after the profile or workspace changed. */
+  updateSession(session: Session): void {
+    this.state.update((state) => (state ? { ...state, session } : state));
+  }
+
   clear(): void {
     this.state.set(null);
     removeStored(SESSION_HINT_KEY);

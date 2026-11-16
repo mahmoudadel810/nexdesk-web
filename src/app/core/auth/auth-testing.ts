@@ -15,6 +15,7 @@ export const TEST_SESSION: Session = {
     slug: 'acme-support',
     defaultLanguage: 'en',
     timezone: 'UTC',
+    onboardingCompleted: true,
   },
   permissions: ['tickets.view', 'users.manage'],
 };
