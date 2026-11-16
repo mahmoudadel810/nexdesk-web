@@ -52,3 +52,4 @@ The container's nginx serves the app and forwards `/api` and `/hubs` to `API_UPS
 | `npm run format:check` | Prettier check |
 | `npm test` | Unit tests (single run) |
 | `npm run build` | Production build into `dist/` |
+| `scripts/verify.sh` | Lint, format check, tests and build in one go; run before merging |
