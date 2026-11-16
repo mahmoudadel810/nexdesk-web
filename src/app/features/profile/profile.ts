@@ -2,10 +2,16 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslocoPipe } from '@jsverse/transloco';
+import {
+  NotificationPreference,
+  NotificationType,
+  NotificationsApi,
+} from '../../core/api/notifications.api';
 import { UsersApi } from '../../core/api/workspace.api';
 import { AuthService } from '../../core/auth/auth.service';
 import { toProblem } from '../../core/http/problem';
@@ -25,6 +31,7 @@ import { Notifier } from '../../core/ui/notifier';
     FieldErrorPipe,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -130,6 +137,55 @@ import { Notifier } from '../../core/ui/notifier';
           </form>
         </mat-card-content>
       </mat-card>
+
+      <mat-card appearance="outlined" class="wide">
+        <mat-card-header>
+          <mat-card-title>{{ 'profile.notifications.title' | transloco }}</mat-card-title>
+          <mat-card-subtitle>{{ 'profile.notifications.subtitle' | transloco }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <table class="preferences">
+            <thead>
+              <tr>
+                <th scope="col">{{ 'profile.notifications.event' | transloco }}</th>
+                <th scope="col">{{ 'profile.notifications.inApp' | transloco }}</th>
+                <th scope="col">{{ 'profile.notifications.email' | transloco }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (preference of preferences(); track preference.type) {
+                <tr>
+                  <th scope="row">
+                    {{ 'profile.notifications.types.' + preference.type | transloco }}
+                  </th>
+                  <td>
+                    <mat-checkbox
+                      [checked]="preference.inApp"
+                      [attr.aria-label]="
+                        ('profile.notifications.types.' + preference.type | transloco) +
+                        ' – ' +
+                        ('profile.notifications.inApp' | transloco)
+                      "
+                      (change)="setPreference(preference.type, { inApp: $event.checked })"
+                    />
+                  </td>
+                  <td>
+                    <mat-checkbox
+                      [checked]="preference.email"
+                      [attr.aria-label]="
+                        ('profile.notifications.types.' + preference.type | transloco) +
+                        ' – ' +
+                        ('profile.notifications.email' | transloco)
+                      "
+                      (change)="setPreference(preference.type, { email: $event.checked })"
+                    />
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
     </div>
   `,
   styles: `
@@ -143,6 +199,34 @@ import { Notifier } from '../../core/ui/notifier';
     mat-card-content {
       padding-block-start: 16px;
     }
+
+    .wide {
+      grid-column: 1 / -1;
+      max-inline-size: 896px;
+    }
+
+    .preferences {
+      inline-size: 100%;
+      border-collapse: collapse;
+    }
+
+    .preferences th,
+    .preferences td {
+      padding: 4px 8px;
+      text-align: start;
+      font: var(--mat-sys-body-medium);
+    }
+
+    .preferences thead th {
+      color: var(--mat-sys-on-surface-variant);
+      font: var(--mat-sys-label-large);
+    }
+
+    .preferences td,
+    .preferences thead th:not(:first-child) {
+      inline-size: 96px;
+      text-align: center;
+    }
   `,
 })
 export class Profile {
@@ -152,7 +236,10 @@ export class Profile {
   private readonly notifier = inject(Notifier);
   private readonly formBuilder = inject(NonNullableFormBuilder);
 
+  private readonly notificationsApi = inject(NotificationsApi);
+
   protected readonly languages = SUPPORTED_LANGUAGES;
+  protected readonly preferences = signal<readonly NotificationPreference[]>([]);
   protected readonly savingProfile = signal(false);
   protected readonly savingPassword = signal(false);
   protected readonly passwordError = signal<string | null>(null);
@@ -173,6 +260,24 @@ export class Profile {
     ],
     confirmPassword: ['', [Validators.required, matches('newPassword')]],
   });
+
+  constructor() {
+    this.notificationsApi
+      .preferences()
+      .subscribe((preferences) => this.preferences.set(preferences));
+  }
+
+  protected setPreference(
+    type: NotificationType,
+    change: Partial<Pick<NotificationPreference, 'inApp' | 'email'>>,
+  ): void {
+    const current = this.preferences().find((preference) => preference.type === type);
+    if (current) {
+      this.notificationsApi
+        .updatePreferences([{ ...current, ...change }])
+        .subscribe((preferences) => this.preferences.set(preferences));
+    }
+  }
 
   protected saveProfile(): void {
     if (this.profileForm.invalid) {

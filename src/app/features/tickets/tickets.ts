@@ -28,6 +28,7 @@ import {
 } from '../../core/api/tickets.api';
 import { Paged, Team, TeamsApi, User, UsersApi } from '../../core/api/workspace.api';
 import { AuthService } from '../../core/auth/auth.service';
+import { RealtimeService } from '../../core/realtime/realtime.service';
 import { Notifier } from '../../core/ui/notifier';
 import { Confirm } from '../../shared/confirm-dialog';
 import { LocalDatePipe } from '../../shared/local-date.pipe';
@@ -499,6 +500,15 @@ export class Tickets {
     this.searches
       .pipe(debounceTime(250), distinctUntilChanged(), takeUntilDestroyed())
       .subscribe(() => this.changed());
+
+    // Someone else created or changed a ticket: refresh, unless a selection is in progress.
+    inject(RealtimeService)
+      .ticketChanges.pipe(debounceTime(600), takeUntilDestroyed())
+      .subscribe(() => {
+        if (this.selected().size === 0) {
+          this.reload(false);
+        }
+      });
 
     this.reload(false);
     this.ticketsApi.views().subscribe((views) => this.views.set(views));
