@@ -1,0 +1,35 @@
+{
+  "common": {
+    "brandHome": "NexDesk home",
+    "changeLanguage": "Change language",
+    "useDarkTheme": "Switch to dark theme",
+    "useLightTheme": "Switch to light theme"
+  },
+  "languages": {
+    "en": "English",
+    "ar": "العربية"
+  },
+  "landing": {
+    "title": "Customer support your whole team can run",
+    "subtitle": "NexDesk gives every company its own help desk: tickets, SLAs, automation and a knowledge base in one workspace.",
+    "highlightsLabel": "Product highlights",
+    "highlights": {
+      "tickets": {
+        "title": "Shared ticket inbox",
+        "body": "Assign, tag and resolve customer requests together, with internal notes and a full activity timeline."
+      },
+      "sla": {
+        "title": "SLA tracking",
+        "body": "Response and resolution targets that respect your business hours, holidays and timezone."
+      },
+      "automation": {
+        "title": "Automation rules",
+        "body": "Route, prioritise and follow up on tickets automatically with triggers, conditions and actions."
+      },
+      "knowledge": {
+        "title": "Knowledge base",
+        "body": "Publish help articles so customers find answers before they need to open a ticket."
+      }
+    }
+  }
+}

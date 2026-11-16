@@ -1,12 +1,16 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { LanguageService } from './core/i18n/language.service';
+import { ThemeService } from './core/theme/theme.service';
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
-  styleUrl: './app.scss',
-  templateUrl: './app.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterOutlet],
+  template: `<router-outlet />`,
 })
 export class App {
-  protected readonly title = signal('nexdesk-web');
+  // Injected eagerly so language, direction and colour scheme are applied before the first route renders.
+  protected readonly language = inject(LanguageService);
+  protected readonly theme = inject(ThemeService);
 }
