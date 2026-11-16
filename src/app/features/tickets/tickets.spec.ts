@@ -61,6 +61,7 @@ describe('Tickets', () => {
     expect(request.request.params.getAll('status')).toEqual(['New', 'Open', 'Pending', 'OnHold']);
     expect(request.request.params.get('sort')).toBe('-lastActivityAt');
     request.flush({ items: [TICKET], page: 1, pageSize: 25, totalCount: 1 });
+    backend.expectOne('/api/v1/views').flush([]);
     backend
       .expectOne((r) => r.url === '/api/v1/users')
       .flush({ items: [], page: 1, pageSize: 100, totalCount: 0 });
@@ -78,6 +79,69 @@ describe('Tickets', () => {
     expect(element.textContent).toContain(en.tickets.new.open);
   });
 
+  it('applies a saved view to the filters and reloads', async () => {
+    const fixture = TestBed.createComponent(Tickets);
+    await fixture.whenStable();
+    backend
+      .expectOne((r) => r.url === '/api/v1/tickets')
+      .flush({ items: [], page: 1, pageSize: 25, totalCount: 0 });
+    backend.expectOne('/api/v1/views').flush([
+      {
+        id: 'view-1',
+        name: 'Urgent mine',
+        isShared: true,
+        isMine: false,
+        filter: {
+          status: ['Open'],
+          priority: ['Urgent'],
+          assignee: 'me',
+          teamId: null,
+          tag: null,
+          search: 'refund',
+          sort: '-priority',
+        },
+      },
+    ]);
+    backend
+      .expectOne((r) => r.url === '/api/v1/users')
+      .flush({ items: [], page: 1, pageSize: 100, totalCount: 0 });
+    backend.expectOne('/api/v1/teams').flush([]);
+    await fixture.whenStable();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const chips = [...element.querySelectorAll<HTMLElement>('mat-chip-option')];
+    expect(
+      chips.map((chip) => chip.textContent?.trim().split(/\s+/).slice(0, 2).join(' ')),
+    ).toEqual([en.tickets.views.default, 'Urgent mine']);
+    chips[1].querySelector('button')!.click();
+    await fixture.whenStable();
+
+    const request = backend.expectOne((r) => r.url === '/api/v1/tickets');
+    expect(request.request.params.getAll('status')).toEqual(['Open']);
+    expect(request.request.params.getAll('priority')).toEqual(['Urgent']);
+    expect(request.request.params.get('assigneeId')).toBe('user-1');
+    expect(request.request.params.get('search')).toBe('refund');
+    expect(request.request.params.get('sort')).toBe('-priority');
+    request.flush({ items: [], page: 1, pageSize: 25, totalCount: 0 });
+  });
+
+  it('offers bulk actions only to people who can edit tickets', async () => {
+    const fixture = TestBed.createComponent(Tickets);
+    await fixture.whenStable();
+    backend
+      .expectOne((r) => r.url === '/api/v1/tickets')
+      .flush({ items: [TICKET], page: 1, pageSize: 25, totalCount: 1 });
+    backend.expectOne('/api/v1/views').flush([]);
+    backend
+      .expectOne((r) => r.url === '/api/v1/users')
+      .flush({ items: [], page: 1, pageSize: 100, totalCount: 0 });
+    backend.expectOne('/api/v1/teams').flush([]);
+    await fixture.whenStable();
+
+    // The test session has tickets.view and tickets.create but not tickets.edit.
+    expect((fixture.nativeElement as HTMLElement).querySelector('mat-checkbox')).toBeNull();
+  });
+
   it('says so when no ticket matches', async () => {
     const fixture = TestBed.createComponent(Tickets);
     await fixture.whenStable();
@@ -85,6 +149,7 @@ describe('Tickets', () => {
     backend
       .expectOne((r) => r.url === '/api/v1/tickets')
       .flush({ items: [], page: 1, pageSize: 25, totalCount: 0 });
+    backend.expectOne('/api/v1/views').flush([]);
     backend
       .expectOne((r) => r.url === '/api/v1/users')
       .flush({ items: [], page: 1, pageSize: 100, totalCount: 0 });
@@ -106,6 +171,7 @@ describe('TicketTimeline', () => {
       isInternal: false,
       attachments: [],
       eventType: null,
+      field: null,
       oldValue: null,
       newValue: null,
       ...overrides,

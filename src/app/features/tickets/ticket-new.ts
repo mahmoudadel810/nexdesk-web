@@ -11,6 +11,8 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
 import {
   Attachment,
+  CustomField,
+  CustomFieldValues,
   Customer,
   TICKET_PRIORITIES,
   TICKET_TYPES,
@@ -24,6 +26,7 @@ import { FieldErrorPipe } from '../../core/ui/field-error.pipe';
 import { applyServerErrors } from '../../core/ui/form-errors';
 import { Notifier } from '../../core/ui/notifier';
 import { AttachmentPicker } from './attachment-picker';
+import { CustomFieldInputs, missingRequired } from './custom-field-inputs';
 import { TagInput } from './tag-input';
 
 @Component({
@@ -31,6 +34,7 @@ import { TagInput } from './tag-input';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AttachmentPicker,
+    CustomFieldInputs,
     FieldErrorPipe,
     MatAutocompleteModule,
     MatButtonModule,
@@ -139,6 +143,16 @@ import { TagInput } from './tag-input';
         </mat-form-field>
       </div>
 
+      @if (customFields().length > 0) {
+        <div class="row">
+          <app-custom-field-inputs
+            [fields]="customFields()"
+            [values]="customValues()"
+            (valueChange)="setCustomValue($event.key, $event.value)"
+          />
+        </div>
+      }
+
       <app-tag-input [(tags)]="tags" />
       <app-attachment-picker [(attachments)]="attachments" />
 
@@ -173,6 +187,8 @@ export class TicketNew {
   protected readonly teams = signal<readonly Team[]>([]);
   protected readonly suggestions = signal<readonly Customer[]>([]);
   protected readonly tags = signal<readonly string[]>([]);
+  protected readonly customFields = signal<readonly CustomField[]>([]);
+  protected readonly customValues = signal<CustomFieldValues>({});
   protected readonly attachments = signal<readonly Attachment[]>([]);
   protected readonly submitting = signal(false);
   protected readonly error = signal<string | null>(null);
@@ -196,6 +212,8 @@ export class TicketNew {
       .list()
       .subscribe((teams) => this.teams.set(teams));
 
+    this.ticketsApi.customFields().subscribe((fields) => this.customFields.set(fields));
+
     this.form.controls.requesterEmail.valueChanges
       .pipe(
         debounceTime(200),
@@ -214,9 +232,21 @@ export class TicketNew {
     }
   }
 
+  protected setCustomValue(key: string, value: string | null): void {
+    this.customValues.update((values) => ({ ...values, [key]: value }));
+  }
+
   protected submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
+    }
+
+    const missing = missingRequired(this.customFields(), this.customValues());
+    if (missing.length > 0) {
+      this.error.set(
+        this.notifier.translate('tickets.customFields.missing', { fields: missing.join(', ') }),
+      );
       return;
     }
 
@@ -229,6 +259,7 @@ export class TicketNew {
         requesterName: value.requesterName.trim() || null,
         tags: this.tags(),
         attachmentIds: this.attachments().map((attachment) => attachment.id),
+        customFields: this.customValues(),
       })
       .subscribe({
         next: (ticket) => {
