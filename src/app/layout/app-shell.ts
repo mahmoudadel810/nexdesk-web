@@ -1,13 +1,33 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { map } from 'rxjs';
+import { AVAILABILITIES, Availability, UsersApi } from '../core/api/workspace.api';
 import { AuthService } from '../core/auth/auth.service';
 import { PreferencesControls } from './preferences-controls';
+
+interface NavItem {
+  readonly path: string;
+  readonly icon: string;
+  readonly label: string;
+  readonly permission?: string;
+  readonly exact?: boolean;
+}
+
+const NAV_ITEMS: readonly NavItem[] = [
+  { path: '/app', icon: 'space_dashboard', label: 'nav.dashboard', exact: true },
+  { path: '/app/users', icon: 'group', label: 'nav.users', permission: 'users.view' },
+  { path: '/app/teams', icon: 'diversity_3', label: 'nav.teams', permission: 'users.view' },
+];
 
 @Component({
   selector: 'app-shell',
@@ -16,15 +36,29 @@ import { PreferencesControls } from './preferences-controls';
     MatButtonModule,
     MatDividerModule,
     MatIconModule,
+    MatListModule,
     MatMenuModule,
+    MatSidenavModule,
     MatToolbarModule,
     PreferencesControls,
     RouterLink,
+    RouterLinkActive,
     RouterOutlet,
     TranslocoPipe,
   ],
   template: `
     <mat-toolbar class="header">
+      @if (compact()) {
+        <button
+          mat-icon-button
+          type="button"
+          [attr.aria-label]="'nav.toggleMenu' | transloco"
+          [attr.aria-expanded]="menuOpen()"
+          (click)="menuOpen.set(!menuOpen())"
+        >
+          <mat-icon aria-hidden="true">menu</mat-icon>
+        </button>
+      }
       <a class="brand" routerLink="/app" [attr.aria-label]="'nav.dashboard' | transloco">
         <mat-icon aria-hidden="true">support_agent</mat-icon>
         <span>NexDesk</span>
@@ -42,6 +76,7 @@ import { PreferencesControls } from './preferences-controls';
         [attr.aria-label]="'nav.accountMenu' | transloco"
       >
         <span aria-hidden="true">{{ initials() }}</span>
+        <span class="presence" [attr.data-availability]="availability()"></span>
       </button>
       <mat-menu #accountMenu="matMenu">
         @if (auth.session()?.user; as user) {
@@ -54,23 +89,90 @@ import { PreferencesControls } from './preferences-controls';
           </div>
           <mat-divider />
         }
+        <button mat-menu-item type="button" [matMenuTriggerFor]="availabilityMenu">
+          <mat-icon aria-hidden="true">circle</mat-icon>
+          <span>{{ 'availability.' + availability() | transloco }}</span>
+        </button>
+        <a mat-menu-item routerLink="/app/profile">
+          <mat-icon aria-hidden="true">person</mat-icon>
+          <span>{{ 'nav.profile' | transloco }}</span>
+        </a>
         <button mat-menu-item type="button" (click)="signOut()">
           <mat-icon aria-hidden="true">logout</mat-icon>
           <span>{{ 'nav.signOut' | transloco }}</span>
         </button>
       </mat-menu>
+      <mat-menu #availabilityMenu="matMenu">
+        @for (option of availabilities; track option) {
+          <button
+            mat-menu-item
+            type="button"
+            [attr.aria-current]="option === availability() ? 'true' : null"
+            (click)="setAvailability(option)"
+          >
+            <mat-icon aria-hidden="true">{{ option === availability() ? 'check' : '' }}</mat-icon>
+            <span>{{ 'availability.' + option | transloco }}</span>
+          </button>
+        }
+      </mat-menu>
     </mat-toolbar>
-    <main class="content">
-      <router-outlet />
-    </main>
+
+    <mat-sidenav-container class="body">
+      <mat-sidenav
+        class="nav"
+        [mode]="compact() ? 'over' : 'side'"
+        [opened]="!compact() || menuOpen()"
+        (closedStart)="menuOpen.set(false)"
+      >
+        <mat-nav-list [attr.aria-label]="'nav.mainMenu' | transloco">
+          @for (item of navItems(); track item.path) {
+            <a
+              mat-list-item
+              routerLinkActive
+              #link="routerLinkActive"
+              [routerLink]="item.path"
+              [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+              [activated]="link.isActive"
+              [attr.aria-current]="link.isActive ? 'page' : null"
+              (click)="menuOpen.set(false)"
+            >
+              <mat-icon matListItemIcon aria-hidden="true">{{ item.icon }}</mat-icon>
+              <span matListItemTitle>{{ item.label | transloco }}</span>
+            </a>
+          }
+        </mat-nav-list>
+      </mat-sidenav>
+      <mat-sidenav-content>
+        <main class="content">
+          <router-outlet />
+        </main>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
   `,
   styles: `
+    :host {
+      display: flex;
+      flex-direction: column;
+      block-size: 100dvh;
+    }
+
     .header {
-      position: sticky;
-      inset-block-start: 0;
-      z-index: 10;
+      flex: 0 0 auto;
       gap: 8px;
       border-block-end: 1px solid var(--mat-sys-outline-variant);
+    }
+
+    .body {
+      flex: 1 1 auto;
+      background: var(--mat-sys-surface);
+    }
+
+    .nav {
+      inline-size: 240px;
+      border-inline-end: 1px solid var(--mat-sys-outline-variant);
+      border-radius: 0;
+      padding: 8px;
+      box-sizing: border-box;
     }
 
     .brand {
@@ -100,9 +202,29 @@ import { PreferencesControls } from './preferences-controls';
     }
 
     .avatar {
+      position: relative;
       background: var(--mat-sys-primary-container);
       color: var(--mat-sys-on-primary-container);
       font: var(--mat-sys-label-large);
+    }
+
+    .presence {
+      position: absolute;
+      inset-block-end: 4px;
+      inset-inline-end: 4px;
+      inline-size: 10px;
+      block-size: 10px;
+      border-radius: 50%;
+      border: 2px solid var(--mat-sys-surface);
+      background: var(--mat-sys-outline);
+    }
+
+    .presence[data-availability='Online'] {
+      background: #1e8e3e;
+    }
+
+    .presence[data-availability='Away'] {
+      background: #f29900;
     }
 
     .account {
@@ -138,6 +260,21 @@ import { PreferencesControls } from './preferences-controls';
 export class AppShell {
   protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly usersApi = inject(UsersApi);
+
+  protected readonly availabilities = AVAILABILITIES;
+  protected readonly availability = signal<Availability>('Offline');
+  protected readonly menuOpen = signal(false);
+  protected readonly compact = toSignal(
+    inject(BreakpointObserver)
+      .observe('(max-width: 960px)')
+      .pipe(map((state) => state.matches)),
+    { initialValue: false },
+  );
+
+  protected readonly navItems = computed(() =>
+    NAV_ITEMS.filter((item) => !item.permission || this.auth.can(item.permission)),
+  );
 
   protected readonly initials = computed(() =>
     (this.auth.session()?.user.fullName ?? '')
@@ -148,8 +285,22 @@ export class AppShell {
       .join(''),
   );
 
+  constructor() {
+    // Signing in means the agent is at their desk; they can switch to Away or Offline from the menu.
+    this.setAvailability('Online');
+  }
+
+  protected setAvailability(availability: Availability): void {
+    this.usersApi
+      .setAvailability(availability)
+      .subscribe((user) => this.availability.set(user.availability));
+  }
+
   protected signOut(): void {
     const leave = () => void this.router.navigate(['/auth/login']);
-    this.auth.logout().subscribe({ next: leave, error: leave });
+    this.usersApi.setAvailability('Offline').subscribe({
+      complete: () => this.auth.logout().subscribe({ next: leave, error: leave }),
+      error: () => this.auth.logout().subscribe({ next: leave, error: leave }),
+    });
   }
 }
