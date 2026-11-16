@@ -6,6 +6,14 @@ export function readStored(key: string): string | null {
   }
 }
 
+export function removeStored(key: string): void {
+  try {
+    globalThis.localStorage?.removeItem(key);
+  } catch {
+    // Nothing was stored if storage is unavailable.
+  }
+}
+
 export function writeStored(key: string, value: string): void {
   try {
     globalThis.localStorage?.setItem(key, value);
