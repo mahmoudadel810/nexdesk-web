@@ -195,6 +195,9 @@ export class TicketTimeline {
         return 'diversity_3';
       case 'TagsChanged':
         return 'sell';
+      case 'MergedInto':
+      case 'MergedFrom':
+        return 'merge';
       default:
         return 'edit';
     }
@@ -207,6 +210,7 @@ export class TicketTimeline {
     const none = this.transloco.translate('tickets.timeline.none');
     return this.transloco.translate(`tickets.timeline.events.${item.eventType}`, {
       actor: this.actorName(item),
+      field: item.field ?? '',
       from: value(item.oldValue) ?? none,
       to: value(item.newValue) ?? none,
     });

@@ -29,7 +29,8 @@
     "toggleMenu": "Toggle navigation menu",
     "mainMenu": "Main menu",
     "pricing": "Pricing",
-    "tickets": "Tickets"
+    "tickets": "Tickets",
+    "customFields": "Custom fields"
   },
   "roles": {
     "Owner": "Owner",
@@ -83,7 +84,17 @@
     "invalid-attachment": "One or more attachments could not be used. Upload them again.",
     "attachment-not-found": "This attachment is no longer available.",
     "file-too-large": "Files can be at most 10 MB.",
-    "file-type-blocked": "This type of file cannot be uploaded."
+    "file-type-blocked": "This type of file cannot be uploaded.",
+    "stale-ticket": "Someone else just changed this ticket. It was reloaded; apply your change again.",
+    "merge-into-self": "A ticket cannot be merged into itself.",
+    "unknown-custom-field": "One of the custom fields no longer exists. Reload the page.",
+    "invalid-custom-field-value": "A custom field has a value that does not fit its type.",
+    "required-custom-field-missing": "Fill in every required custom field.",
+    "custom-field-not-found": "This custom field no longer exists.",
+    "custom-field-key-taken": "A field with this key already exists.",
+    "custom-field-limit": "A workspace can have at most 30 custom fields.",
+    "view-not-found": "This view no longer exists.",
+    "shared-views-restricted": "Only admins can create or change views shared with everyone."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -489,8 +500,87 @@
         "TypeChanged": "{{actor}} changed the type from {{from}} to {{to}}",
         "AssigneeChanged": "{{actor}} changed the assignee from {{from}} to {{to}}",
         "TeamChanged": "{{actor}} changed the team from {{from}} to {{to}}",
-        "TagsChanged": "{{actor}} changed the tags from {{from}} to {{to}}"
+        "TagsChanged": "{{actor}} changed the tags from {{from}} to {{to}}",
+        "CustomFieldChanged": "{{actor}} changed {{field}} from {{from}} to {{to}}",
+        "MergedInto": "{{actor}} merged this ticket into {{to}}",
+        "MergedFrom": "{{actor}} merged ticket {{to}} into this one"
       }
+    },
+    "search": "Search subject, messages, requester or #number",
+    "views": {
+      "label": "Saved views",
+      "default": "Unresolved",
+      "shared": "Shared with everyone",
+      "save": "Save view",
+      "delete": "Delete view",
+      "saveTitle": "Save this view",
+      "saveBody": "The current search, filters and sort order are saved under a name.",
+      "name": "View name",
+      "share": "Share with everyone in the workspace",
+      "saved": "View “{{name}}” saved.",
+      "deleteTitle": "Delete the view “{{name}}”?",
+      "deleteBody": "Only the saved filter is deleted. Tickets are not affected.",
+      "deleteSharedBody": "This view is shared: it disappears for everyone. Tickets are not affected."
+    },
+    "bulk": {
+      "label": "Bulk actions",
+      "selected": "{{count}} selected",
+      "setStatus": "Set status",
+      "setPriority": "Set priority",
+      "assign": "Assign to",
+      "addTag": "Add tag",
+      "tagLabel": "Tag",
+      "clear": "Clear selection",
+      "selectAll": "Select all tickets on this page",
+      "selectOne": "Select ticket #{{number}}",
+      "done": "{{count}} tickets updated.",
+      "partial": "{{updated}} updated, {{failed}} could not be changed (closed or deleted)."
+    },
+    "customFields": {
+      "none": "None",
+      "missing": "Fill in the required fields: {{fields}}"
+    },
+    "merge": {
+      "open": "Merge into another ticket",
+      "title": "Merge ticket #{{number}}",
+      "body": "The conversation and files of this ticket move to the ticket you choose, and this one is closed.",
+      "search": "Find the ticket to keep",
+      "results": "Matching tickets",
+      "noResults": "No open ticket matches.",
+      "submit": "Merge",
+      "done": "Merged into ticket #{{number}}.",
+      "mergedInto": "This ticket was merged into"
+    }
+  },
+  "customFields": {
+    "title": "Custom fields",
+    "subtitle": "Extra ticket fields for information that is specific to your business.",
+    "create": "New field",
+    "createTitle": "New custom field",
+    "editTitle": "Edit custom field",
+    "label": "Label",
+    "key": "Key",
+    "keyHint": "Used in the API. It cannot be changed later.",
+    "keyPattern": "Start with a lowercase letter; use lowercase letters, digits and underscores.",
+    "type": "Type",
+    "options": "Options",
+    "optionsHint": "One option per line.",
+    "required": "Agents must fill this in",
+    "active": "Show this field on tickets",
+    "requiredBadge": "Required",
+    "inactiveBadge": "Hidden",
+    "emptyTitle": "No custom fields yet",
+    "emptyBody": "Add fields such as an order number or a product area to capture what your team needs on every ticket.",
+    "saved": "{{label}} was saved.",
+    "deleted": "{{label}} was deleted.",
+    "deleteTitle": "Delete the field “{{label}}”?",
+    "deleteBody": "It disappears from every ticket. Values already entered are kept in the database but no longer shown.",
+    "types": {
+      "Text": "Text",
+      "Number": "Number",
+      "Dropdown": "Dropdown",
+      "Checkbox": "Checkbox",
+      "Date": "Date"
     }
   }
 }

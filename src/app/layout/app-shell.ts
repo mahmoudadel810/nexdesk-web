@@ -35,6 +35,12 @@ const NAV_ITEMS: readonly NavItem[] = [
   },
   { path: '/app/users', icon: 'group', label: 'nav.users', permission: 'users.view' },
   { path: '/app/teams', icon: 'diversity_3', label: 'nav.teams', permission: 'users.view' },
+  {
+    path: '/app/settings/custom-fields',
+    icon: 'tune',
+    label: 'nav.customFields',
+    permission: 'custom-fields.manage',
+  },
 ];
 
 @Component({

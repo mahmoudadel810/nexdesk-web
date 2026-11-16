@@ -11,6 +11,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -26,7 +27,9 @@ import {
   TICKET_PRIORITIES,
   TICKET_STATUSES,
   TICKET_TYPES,
+  CustomField,
   TicketDetail as Ticket,
+  TicketListItem,
   TicketStatus,
   TicketsApi,
   TimelineItem,
@@ -39,6 +42,8 @@ import { Confirm } from '../../shared/confirm-dialog';
 import { LocalDatePipe } from '../../shared/local-date.pipe';
 import { Prompt } from '../../shared/prompt-dialog';
 import { AttachmentPicker } from './attachment-picker';
+import { CustomFieldInputs } from './custom-field-inputs';
+import { MergeDialog } from './merge-dialog';
 import { TagInput } from './tag-input';
 import { TicketTimeline } from './ticket-timeline';
 
@@ -49,6 +54,7 @@ type ReplyMode = 'reply' | 'note';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AttachmentPicker,
+    CustomFieldInputs,
     FormsModule,
     LocalDatePipe,
     MatButtonModule,
@@ -122,6 +128,10 @@ type ReplyMode = 'reply' | 'note';
                   <mat-icon aria-hidden="true">edit</mat-icon>
                   <span>{{ 'tickets.detail.rename' | transloco }}</span>
                 </button>
+                <button mat-menu-item type="button" (click)="merge(ticket)">
+                  <mat-icon aria-hidden="true">merge</mat-icon>
+                  <span>{{ 'tickets.merge.open' | transloco }}</span>
+                </button>
               }
               @if (canDelete()) {
                 <button mat-menu-item type="button" (click)="remove(ticket)">
@@ -138,7 +148,14 @@ type ReplyMode = 'reply' | 'note';
         <section class="conversation" [attr.aria-label]="'tickets.timeline.label' | transloco">
           <app-ticket-timeline [items]="timeline()" />
 
-          @if (closed()) {
+          @if (ticket.mergedInto; as target) {
+            <p class="form-notice">
+              {{ 'tickets.merge.mergedInto' | transloco }}
+              <a [routerLink]="['/app/tickets', target.id]">
+                <span dir="ltr">#{{ target.number }}</span> {{ target.subject }}
+              </a>
+            </p>
+          } @else if (closed()) {
             <p class="form-notice">{{ 'tickets.detail.closedNotice' | transloco }}</p>
           } @else if (canReply()) {
             <form class="composer" (ngSubmit)="send(ticket)">
@@ -275,6 +292,12 @@ type ReplyMode = 'reply' | 'note';
             [tags]="ticket.tags"
             [disabled]="!canEdit() || closed()"
             (tagsChange)="update(ticket, { tags: $event })"
+          />
+          <app-custom-field-inputs
+            [fields]="customFields()"
+            [values]="ticket.customFields"
+            [disabled]="!canEdit() || closed()"
+            (valueChange)="setCustomField(ticket, $event.key, $event.value)"
           />
 
           <dl class="facts">
@@ -441,6 +464,7 @@ export class TicketDetail {
   private readonly confirm = inject(Confirm);
   private readonly router = inject(Router);
   private readonly prompt = inject(Prompt);
+  private readonly dialog = inject(MatDialog);
 
   readonly id = input.required<string>();
 
@@ -453,6 +477,7 @@ export class TicketDetail {
   protected readonly missing = signal(false);
   private readonly agents = signal<readonly User[]>([]);
   protected readonly teams = signal<readonly Team[]>([]);
+  protected readonly customFields = signal<readonly CustomField[]>([]);
 
   protected readonly mode = signal<ReplyMode>('reply');
   protected readonly body = signal('');
@@ -487,14 +512,33 @@ export class TicketDetail {
     inject(TeamsApi)
       .list()
       .subscribe((teams) => this.teams.set(teams));
+    this.api.customFields().subscribe((fields) => this.customFields.set(fields));
   }
 
   protected update(ticket: Ticket, changes: Parameters<TicketsApi['update']>[1]): void {
-    this.apply(this.api.update(ticket.id, changes));
+    this.apply(this.api.update(ticket.id, changes, ticket.version));
   }
 
   protected assign(ticket: Ticket, assigneeId: string | null, teamId: string | null): void {
-    this.apply(this.api.assign(ticket.id, assigneeId, teamId));
+    this.apply(this.api.assign(ticket.id, assigneeId, teamId, ticket.version));
+  }
+
+  protected setCustomField(ticket: Ticket, key: string, value: string | null): void {
+    this.update(ticket, { customFields: { [key]: value } });
+  }
+
+  protected merge(ticket: Ticket): void {
+    this.dialog
+      .open<MergeDialog, Ticket, TicketListItem>(MergeDialog, { data: ticket, width: '560px' })
+      .afterClosed()
+      .pipe(
+        filter((target) => target !== undefined && target !== null),
+        switchMap((target) => this.api.merge(ticket.id, target.id)),
+      )
+      .subscribe((target) => {
+        this.notifier.success('tickets.merge.done', { number: target.number });
+        void this.router.navigate(['/app/tickets', target.id]);
+      });
   }
 
   protected toggleWatching(ticket: Ticket): void {
