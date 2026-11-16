@@ -91,3 +91,97 @@ body {
     font-weight: 500;
   }
 }
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.dialog-lead {
+  margin: 0 0 8px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-end: 24px;
+
+  h1 {
+    font: var(--mat-sys-headline-small);
+    margin: 0 0 4px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.table-card {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  overflow-x: auto;
+
+  table {
+    min-inline-size: 640px;
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  font: var(--mat-sys-label-medium);
+
+  &.muted {
+    background: var(--mat-sys-surface-container-highest);
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.row-actions {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 48px;
+    inline-size: 48px;
+    block-size: 48px;
+  }
+
+  h2 {
+    font: var(--mat-sys-title-large);
+    color: var(--mat-sys-on-surface);
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    max-inline-size: 420px;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
