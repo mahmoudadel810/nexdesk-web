@@ -32,6 +32,15 @@ const TICKET: TicketListItem = {
   tags: ['billing'],
   createdAt: '2026-11-17T09:00:00Z',
   lastActivityAt: '2026-11-17T09:30:00Z',
+  sla: {
+    firstResponseDueAt: null,
+    firstResponseBreached: true,
+    firstResponseMet: false,
+    resolutionDueAt: '2099-01-01T00:00:00Z',
+    resolutionBreached: false,
+    isPaused: false,
+    isEscalated: true,
+  },
 };
 
 describe('Tickets', () => {
@@ -76,6 +85,9 @@ describe('Tickets', () => {
     expect(element.querySelector('.status-badge')?.getAttribute('data-status')).toBe('Open');
     expect(element.querySelector('.priority')?.textContent).toContain(en.ticketPriority.Urgent);
     expect(element.textContent).toContain(en.tickets.unassigned);
+    expect(element.querySelector('app-sla-status .sla')?.getAttribute('data-state')).toBe(
+      'breached',
+    );
     expect(element.textContent).toContain(en.tickets.new.open);
   });
 

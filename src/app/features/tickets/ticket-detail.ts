@@ -41,6 +41,7 @@ import { Notifier } from '../../core/ui/notifier';
 import { Confirm } from '../../shared/confirm-dialog';
 import { LocalDatePipe } from '../../shared/local-date.pipe';
 import { Prompt } from '../../shared/prompt-dialog';
+import { SlaStatus } from '../../shared/sla-status';
 import { AttachmentPicker } from './attachment-picker';
 import { CustomFieldInputs } from './custom-field-inputs';
 import { MergeDialog } from './merge-dialog';
@@ -67,6 +68,7 @@ type ReplyMode = 'reply' | 'note';
     MatSelectModule,
     MatTooltipModule,
     RouterLink,
+    SlaStatus,
     TagInput,
     TicketTimeline,
     TranslocoPipe,
@@ -300,6 +302,11 @@ type ReplyMode = 'reply' | 'note';
             (valueChange)="setCustomField(ticket, $event.key, $event.value)"
           />
 
+          <section class="sla-box" [attr.aria-label]="'sla.column' | transloco">
+            <h2>{{ 'sla.column' | transloco }}</h2>
+            <app-sla-status [sla]="ticket.sla" [status]="ticket.status" />
+          </section>
+
           <dl class="facts">
             <dt>{{ 'tickets.fields.requester' | transloco }}</dt>
             <dd>
@@ -418,6 +425,18 @@ type ReplyMode = 'reply' | 'note';
     .properties {
       display: grid;
       gap: 12px;
+    }
+
+    .sla-box {
+      border: 1px solid var(--mat-sys-outline-variant);
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
+    .sla-box h2 {
+      font: var(--mat-sys-label-large);
+      color: var(--mat-sys-on-surface-variant);
+      margin: 0 0 8px;
     }
 
     .facts {

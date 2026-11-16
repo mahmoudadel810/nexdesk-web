@@ -101,6 +101,12 @@ export const routes: Routes = [
         title: 'NexDesk',
       },
       {
+        path: 'settings/sla',
+        canActivate: [permissionGuard('sla.manage')],
+        loadComponent: () => import('./features/settings/sla-settings').then((m) => m.SlaSettings),
+        title: 'NexDesk',
+      },
+      {
         path: 'settings/custom-fields',
         canActivate: [permissionGuard('custom-fields.manage')],
         loadComponent: () =>
