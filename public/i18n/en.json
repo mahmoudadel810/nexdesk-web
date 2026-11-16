@@ -3,11 +3,55 @@
     "brandHome": "NexDesk home",
     "changeLanguage": "Change language",
     "useDarkTheme": "Switch to dark theme",
-    "useLightTheme": "Switch to light theme"
+    "useLightTheme": "Switch to light theme",
+    "dismiss": "Dismiss",
+    "loading": "Loading"
   },
   "languages": {
     "en": "English",
     "ar": "العربية"
+  },
+  "nav": {
+    "signIn": "Sign in",
+    "getStarted": "Get started",
+    "openApp": "Open app",
+    "signOut": "Sign out",
+    "accountMenu": "Account menu",
+    "dashboard": "Dashboard"
+  },
+  "roles": {
+    "Owner": "Owner",
+    "Admin": "Admin",
+    "Agent": "Agent",
+    "Viewer": "Viewer"
+  },
+  "validation": {
+    "required": "This field is required.",
+    "email": "Enter a valid email address.",
+    "minLength": "Use at least {{min}} characters.",
+    "maxLength": "Use no more than {{max}} characters.",
+    "passwordStrength": "Include at least one letter and one digit.",
+    "passwordMismatch": "The passwords do not match.",
+    "invalid": "This value is not valid.",
+    "server": "This value was rejected."
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Cannot reach the server. Check your connection and try again.",
+    "validation": "Some fields need your attention.",
+    "unauthorized": "Sign in to continue.",
+    "forbidden": "You do not have permission to do that.",
+    "not-found": "We could not find what you were looking for.",
+    "too-many-requests": "Too many requests. Wait a moment and try again.",
+    "invalid-credentials": "The email or password is incorrect.",
+    "invalid-refresh-token": "Your session has expired. Sign in again.",
+    "account-locked": "Too many failed attempts. Try again in a few minutes.",
+    "account-disabled": "This account has been deactivated.",
+    "email-not-verified": "Confirm your email address before signing in.",
+    "tenant-suspended": "This workspace has been suspended.",
+    "invalid-token": "This link is invalid or has expired.",
+    "email-taken": "An account with this email address already exists.",
+    "slug-taken": "This workspace address is already in use."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -31,5 +75,68 @@
         "body": "Publish help articles so customers find answers before they need to open a ticket."
       }
     }
+  },
+  "auth": {
+    "backToSignIn": "Back to sign in",
+    "fields": {
+      "email": "Email",
+      "workEmail": "Work email",
+      "password": "Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "fullName": "Your name",
+      "workspaceName": "Workspace name",
+      "passwordHint": "At least 8 characters, with a letter and a digit.",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
+    },
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Welcome back. Sign in to your workspace.",
+      "submit": "Sign in",
+      "forgot": "Forgot your password?",
+      "noAccount": "New to NexDesk?",
+      "createWorkspace": "Create a workspace",
+      "resendLink": "Send the confirmation email again"
+    },
+    "register": {
+      "title": "Create your workspace",
+      "subtitle": "Set up a help desk for your team in a minute.",
+      "submit": "Create workspace",
+      "workspaceHint": "Usually your company name.",
+      "haveAccount": "Already have an account?"
+    },
+    "verify": {
+      "verifyingTitle": "Confirming your email…",
+      "failedTitle": "This link did not work",
+      "failedBody": "The confirmation link is invalid or has expired. Enter your email address to get a new one.",
+      "inboxTitle": "Check your inbox",
+      "inboxBody": "We sent a confirmation link to {{email}}. Open it to finish setting up your workspace.",
+      "inboxBodyNoEmail": "Enter your email address and we will send you a new confirmation link.",
+      "resend": "Send a new link",
+      "resent": "If that address still needs confirming, a new link is on its way.",
+      "success": "Email confirmed. Welcome to NexDesk!"
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email address and we will send you a reset link.",
+      "submit": "Send reset link",
+      "sentTitle": "Check your inbox",
+      "sentBody": "If an account exists for {{email}}, a password reset link is on its way."
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "subtitle": "You will be signed out of all devices.",
+      "submit": "Save new password",
+      "success": "Password changed. Sign in with your new password.",
+      "requestNew": "Request a new link"
+    }
+  },
+  "home": {
+    "welcome": "Welcome, {{name}}",
+    "workspaceCard": "Your workspace",
+    "address": "Address",
+    "role": "Your role",
+    "timezone": "Time zone"
   }
 }
