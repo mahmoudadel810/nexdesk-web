@@ -1,8 +1,12 @@
+export type Role = 'Owner' | 'Admin' | 'Agent' | 'Viewer';
+
+export const ROLES: readonly Role[] = ['Owner', 'Admin', 'Agent', 'Viewer'];
+
 export interface SessionUser {
   readonly id: string;
   readonly email: string;
   readonly fullName: string;
-  readonly role: 'Owner' | 'Admin' | 'Agent' | 'Viewer' | null;
+  readonly role: Role | null;
   readonly language: string;
   readonly isPlatformAdmin: boolean;
 }
@@ -13,6 +17,7 @@ export interface SessionTenant {
   readonly slug: string;
   readonly defaultLanguage: string;
   readonly timezone: string;
+  readonly onboardingCompleted: boolean;
 }
 
 export interface Session {

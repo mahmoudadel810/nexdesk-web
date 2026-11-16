@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './core/auth/auth.guards';
+import { authGuard, guestGuard, onboardingGuard, permissionGuard } from './core/auth/auth.guards';
 
 export const routes: Routes = [
   {
@@ -39,18 +39,46 @@ export const routes: Routes = [
         loadComponent: () => import('./features/auth/reset-password').then((m) => m.ResetPassword),
         title: 'NexDesk',
       },
+      {
+        path: 'accept-invite',
+        loadComponent: () => import('./features/auth/accept-invite').then((m) => m.AcceptInvite),
+        title: 'NexDesk',
+      },
       { path: '', pathMatch: 'full', redirectTo: 'login' },
     ],
   },
   {
+    path: 'onboarding',
+    canActivate: [authGuard, permissionGuard('settings.manage')],
+    loadComponent: () => import('./features/onboarding/onboarding').then((m) => m.Onboarding),
+    title: 'NexDesk',
+  },
+  {
     path: 'app',
-    canActivate: [authGuard],
+    canActivate: [authGuard, onboardingGuard],
     loadComponent: () => import('./layout/app-shell').then((m) => m.AppShell),
     children: [
       {
         path: '',
         pathMatch: 'full',
         loadComponent: () => import('./features/home/home').then((m) => m.Home),
+        title: 'NexDesk',
+      },
+      {
+        path: 'users',
+        canActivate: [permissionGuard('users.view')],
+        loadComponent: () => import('./features/users/users').then((m) => m.Users),
+        title: 'NexDesk',
+      },
+      {
+        path: 'teams',
+        canActivate: [permissionGuard('users.view')],
+        loadComponent: () => import('./features/teams/teams').then((m) => m.Teams),
+        title: 'NexDesk',
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile').then((m) => m.Profile),
         title: 'NexDesk',
       },
     ],

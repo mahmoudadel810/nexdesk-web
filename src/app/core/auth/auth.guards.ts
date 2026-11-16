@@ -12,6 +12,15 @@ export const authGuard: CanActivateFn = (_route, state) => {
 export const guestGuard: CanActivateFn = () =>
   inject(AuthService).isAuthenticated() ? inject(Router).createUrlTree(['/app']) : true;
 
+/** Sends workspace admins to the setup wizard until they have finished it. */
+export const onboardingGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const tenant = auth.session()?.tenant;
+  return tenant && !tenant.onboardingCompleted && auth.can('settings.manage')
+    ? inject(Router).createUrlTree(['/onboarding'])
+    : true;
+};
+
 export function permissionGuard(permission: string): CanActivateFn {
   return () =>
     inject(AuthService).can(permission) ? true : inject(Router).createUrlTree(['/app']);

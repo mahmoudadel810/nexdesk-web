@@ -5,7 +5,12 @@
     "useDarkTheme": "Switch to dark theme",
     "useLightTheme": "Switch to light theme",
     "dismiss": "Dismiss",
-    "loading": "Loading"
+    "loading": "Loading",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "actions": "Actions"
   },
   "languages": {
     "en": "English",
@@ -17,7 +22,13 @@
     "openApp": "Open app",
     "signOut": "Sign out",
     "accountMenu": "Account menu",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "teams": "Teams",
+    "profile": "Profile",
+    "toggleMenu": "Toggle navigation menu",
+    "mainMenu": "Main menu",
+    "pricing": "Pricing"
   },
   "roles": {
     "Owner": "Owner",
@@ -51,7 +62,17 @@
     "tenant-suspended": "This workspace has been suspended.",
     "invalid-token": "This link is invalid or has expired.",
     "email-taken": "An account with this email address already exists.",
-    "slug-taken": "This workspace address is already in use."
+    "slug-taken": "This workspace address is already in use.",
+    "user-not-found": "This user no longer exists.",
+    "cannot-modify-self": "You cannot change your own role or deactivate your own account.",
+    "insufficient-role": "Only an owner can manage owners.",
+    "wrong-password": "The current password is incorrect.",
+    "invitation-not-found": "This invitation no longer exists.",
+    "invitation-pending": "This person already has a pending invitation.",
+    "invitation-closed": "This invitation was already accepted or revoked.",
+    "team-not-found": "This team no longer exists.",
+    "team-name-taken": "A team with this name already exists.",
+    "unknown-member": "One of the selected people is no longer in this workspace."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -73,6 +94,50 @@
       "knowledge": {
         "title": "Knowledge base",
         "body": "Publish help articles so customers find answers before they need to open a ticket."
+      }
+    },
+    "pricing": {
+      "title": "Simple pricing for every team size",
+      "subtitle": "Start free. Upgrade when your team grows.",
+      "perMonth": "per month",
+      "popular": "Most popular",
+      "cta": "Start with {{plan}}",
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": "$0",
+          "tagline": "For trying NexDesk with a small team.",
+          "features": [
+            "3 agents",
+            "100 tickets per month",
+            "1 GB attachment storage",
+            "Knowledge base and customer portal"
+          ]
+        },
+        "pro": {
+          "name": "Pro",
+          "price": "$29",
+          "tagline": "For growing support teams.",
+          "features": [
+            "10 agents",
+            "2,000 tickets per month",
+            "20 GB attachment storage",
+            "SLA policies and 10 automation rules",
+            "Reports and CSV export"
+          ]
+        },
+        "business": {
+          "name": "Business",
+          "price": "$99",
+          "tagline": "For companies that run on support.",
+          "features": [
+            "Unlimited agents",
+            "Unlimited tickets",
+            "200 GB attachment storage",
+            "Unlimited automation rules",
+            "API keys and outbound webhooks"
+          ]
+        }
       }
     }
   },
@@ -130,6 +195,15 @@
       "submit": "Save new password",
       "success": "Password changed. Sign in with your new password.",
       "requestNew": "Request a new link"
+    },
+    "invite": {
+      "title": "Join {{workspace}}",
+      "subtitle": "You were invited as {{role}}. Your sign-in email will be {{email}}.",
+      "submit": "Join workspace",
+      "loading": "Checking your invitation…",
+      "invalidTitle": "This invitation is no longer valid",
+      "invalidBody": "It may have expired, been revoked or already been used. Ask a workspace admin to send a new one.",
+      "done": "Welcome aboard!"
     }
   },
   "home": {
@@ -138,5 +212,145 @@
     "address": "Address",
     "role": "Your role",
     "timezone": "Time zone"
+  },
+  "availability": {
+    "Online": "Online",
+    "Away": "Away",
+    "Offline": "Offline"
+  },
+  "weekdays": {
+    "Sunday": "Sunday",
+    "Monday": "Monday",
+    "Tuesday": "Tuesday",
+    "Wednesday": "Wednesday",
+    "Thursday": "Thursday",
+    "Friday": "Friday",
+    "Saturday": "Saturday"
+  },
+  "paginator": {
+    "itemsPerPage": "Rows per page",
+    "next": "Next page",
+    "previous": "Previous page",
+    "first": "First page",
+    "last": "Last page",
+    "range": "{{start}}–{{end}} of {{length}}",
+    "empty": "0 of 0"
+  },
+  "businessHours": {
+    "timezone": "Time zone",
+    "week": "Opening hours by weekday",
+    "closed": "Closed",
+    "opensOn": "Opening time on {{day}}",
+    "closesOn": "Closing time on {{day}}",
+    "invalidRange": "Closing time must be after opening time.",
+    "needWorkingDay": "Choose at least one working day."
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "The people who work in this help desk.",
+    "search": "Search by name or email",
+    "role": "Role",
+    "allRoles": "All roles",
+    "status": "Status",
+    "statusAll": "All",
+    "active": "Active",
+    "inactive": "Deactivated",
+    "name": "Name",
+    "lastLogin": "Last sign-in",
+    "never": "Never",
+    "empty": "No users match these filters.",
+    "actionsFor": "Actions for {{name}}",
+    "reactivate": "Reactivate",
+    "reactivated": "{{name}} can sign in again.",
+    "roleHints": {
+      "Owner": "Full access, including billing.",
+      "Admin": "Manages people, settings and all tickets.",
+      "Agent": "Works on tickets and replies to customers.",
+      "Viewer": "Can read tickets and reports but not change them."
+    },
+    "invite": {
+      "open": "Invite user",
+      "title": "Invite a teammate",
+      "body": "They will get an email with a link to choose a password and join this workspace.",
+      "submit": "Send invitation",
+      "sent": "Invitation sent to {{email}}."
+    },
+    "changeRole": {
+      "open": "Change role",
+      "title": "Change role for {{name}}",
+      "done": "Role updated for {{name}}."
+    },
+    "deactivate": {
+      "open": "Deactivate",
+      "title": "Deactivate {{name}}?",
+      "body": "They will be signed out immediately and cannot sign in until you reactivate them. Their tickets and replies are kept.",
+      "done": "{{name}} was deactivated."
+    },
+    "invitations": {
+      "title": "Pending invitations",
+      "expires": "expires {{when}}",
+      "expired": "expired",
+      "resend": "Resend",
+      "revoke": "Revoke",
+      "revoked": "Invitation for {{email}} was revoked."
+    }
+  },
+  "teams": {
+    "title": "Teams",
+    "subtitle": "Group agents so tickets can be routed to the right people.",
+    "create": "New team",
+    "name": "Team name",
+    "description": "Description (optional)",
+    "members": "Members",
+    "memberCount": "Members: {{count}}",
+    "noMembers": "No members yet",
+    "emptyTitle": "No teams yet",
+    "emptyBody": "Create a team such as Billing or Technical Support to organise your agents.",
+    "saved": "{{name}} was saved.",
+    "deleted": "{{name}} was deleted.",
+    "dialog": {
+      "createTitle": "New team",
+      "editTitle": "Edit team"
+    },
+    "delete": {
+      "title": "Delete {{name}}?",
+      "body": "Members keep their accounts. Tickets assigned to this team will no longer have a team."
+    }
+  },
+  "onboarding": {
+    "title": "Set up {{workspace}}",
+    "subtitle": "Three quick steps. You can change all of this later in settings.",
+    "next": "Save and continue",
+    "skip": "Skip for now",
+    "finish": "Finish setup",
+    "done": "Your workspace is ready.",
+    "hours": {
+      "label": "Business hours",
+      "body": "Response-time targets only count the hours your team is working."
+    },
+    "team": {
+      "label": "First team",
+      "body": "Teams let you route tickets to a group, such as Billing or Technical Support. You will be added as its first member."
+    },
+    "invite": {
+      "label": "Invite agents",
+      "body": "Add the people who will answer tickets with you. Leave the rows empty to do this later.",
+      "another": "Add another"
+    }
+  },
+  "profile": {
+    "title": "Your profile",
+    "subtitle": "Update your name, language and password.",
+    "details": "Personal details",
+    "language": "Language",
+    "languageHint": "Used for the interface and for emails sent to you.",
+    "saved": "Profile saved.",
+    "password": {
+      "title": "Password",
+      "subtitle": "Changing it signs you out on your other devices.",
+      "current": "Current password",
+      "submit": "Change password",
+      "changed": "Password changed."
+    }
   }
 }
