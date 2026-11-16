@@ -1,6 +1,7 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, finalize, firstValueFrom, map, shareReplay, tap } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable, defer, finalize, firstValueFrom, map, shareReplay, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { readStored, removeStored, writeStored } from '../browser-storage';
 import { SKIP_AUTH, SKIP_ERROR_TOAST } from '../http/problem';
@@ -8,6 +9,7 @@ import { AuthResponse, RegisterResult, RegisterWorkspace, Session } from './auth
 
 const SESSION_HINT_KEY = 'nexdesk.session';
 const AUTH_URL = `${environment.apiUrl}/auth`;
+const REFRESH_LOCK = 'nexdesk.refresh';
 
 interface AuthState {
   readonly accessToken: string;
@@ -79,16 +81,11 @@ export class AuthService {
 
   /** Exchanges the refresh cookie for a new access token. Concurrent callers share one request. */
   refresh(): Observable<string> {
-    this.refreshInFlight ??= this.http
-      .post<AuthResponse>(`${AUTH_URL}/refresh`, null, { context: selfHandled() })
-      .pipe(
-        map((response) => {
-          this.accept(response);
-          return response.accessToken;
-        }),
-        finalize(() => (this.refreshInFlight = null)),
-        shareReplay({ bufferSize: 1, refCount: false }),
-      );
+    this.refreshInFlight ??= defer(() => this.rotate()).pipe(
+      map((response) => response.accessToken),
+      finalize(() => (this.refreshInFlight = null)),
+      shareReplay({ bufferSize: 1, refCount: false }),
+    );
     return this.refreshInFlight;
   }
 
@@ -99,14 +96,30 @@ export class AuthService {
     }
 
     try {
-      await firstValueFrom(
-        this.http
-          .post<AuthResponse>(`${AUTH_URL}/refresh`, null, { context: selfHandled() })
-          .pipe(map((response) => this.accept(response))),
-      );
-    } catch {
-      this.clear();
+      await this.rotate();
+    } catch (error) {
+      // A server that is down or restarting says nothing about the session, so only a refusal ends it.
+      if (error instanceof HttpErrorResponse && error.status === 401) {
+        this.clear();
+      }
     }
+  }
+
+  /**
+   * Rotates the refresh cookie. The lock spans browser tabs: without it two tabs would present the
+   * same cookie, and the API treats a second use as theft and ends the whole session.
+   */
+  private rotate(): Promise<AuthResponse> {
+    const request = async () => {
+      const response = await firstValueFrom(
+        this.http.post<AuthResponse>(`${AUTH_URL}/refresh`, null, { context: selfHandled() }),
+      );
+      this.accept(response);
+      return response;
+    };
+
+    const locks = globalThis.navigator?.locks;
+    return locks ? locks.request(REFRESH_LOCK, request) : request();
   }
 
   logout(): Observable<void> {

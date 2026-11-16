@@ -124,6 +124,10 @@ export class UsersApi {
     return this.http.get<Paged<User>>(`${API}/users`, { params });
   }
 
+  get(userId: string): Observable<User> {
+    return this.http.get<User>(`${API}/users/${userId}`);
+  }
+
   changeRole(userId: string, role: Role): Observable<User> {
     return this.http.put<User>(`${API}/users/${userId}/role`, { role });
   }

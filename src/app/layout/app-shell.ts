@@ -6,6 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
@@ -13,6 +14,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { map } from 'rxjs';
 import { AVAILABILITIES, Availability, UsersApi } from '../core/api/workspace.api';
 import { AuthService } from '../core/auth/auth.service';
+import { TranslatedPaginatorIntl } from '../core/i18n/paginator-intl';
 import { PreferencesControls } from './preferences-controls';
 
 interface NavItem {
@@ -32,6 +34,7 @@ const NAV_ITEMS: readonly NavItem[] = [
 @Component({
   selector: 'app-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{ provide: MatPaginatorIntl, useClass: TranslatedPaginatorIntl }],
   imports: [
     MatButtonModule,
     MatDividerModule,
@@ -286,8 +289,17 @@ export class AppShell {
   );
 
   constructor() {
-    // Signing in means the agent is at their desk; they can switch to Away or Offline from the menu.
-    this.setAvailability('Online');
+    const userId = this.auth.session()?.user.id;
+    if (userId) {
+      this.usersApi.get(userId).subscribe((user) => {
+        // Arriving while Offline means a new working session; a chosen Away survives page reloads.
+        if (user.availability === 'Offline') {
+          this.setAvailability('Online');
+        } else {
+          this.availability.set(user.availability);
+        }
+      });
+    }
   }
 
   protected setAvailability(availability: Availability): void {
