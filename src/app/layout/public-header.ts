@@ -68,6 +68,10 @@ import { PreferencesControls } from './preferences-controls';
       .sign-in {
         display: none;
       }
+
+      .brand span {
+        display: none;
+      }
     }
   `,
 })
