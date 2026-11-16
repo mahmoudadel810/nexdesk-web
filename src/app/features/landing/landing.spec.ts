@@ -26,13 +26,24 @@ describe('Landing', () => {
     });
   });
 
-  it('renders the pitch and all four highlights', async () => {
+  it('renders the pitch, four highlights and three priced plans', async () => {
     const fixture = TestBed.createComponent(Landing);
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
 
     expect(element.querySelector('h1')?.textContent).toContain(en.landing.title);
-    expect(element.querySelectorAll('mat-card').length).toBe(4);
+    expect(element.querySelectorAll('.highlights mat-card').length).toBe(4);
+
+    const plans = [...element.querySelectorAll('.plan')];
+    expect(plans.map((plan) => plan.querySelector('h3')?.textContent?.trim())).toEqual([
+      en.landing.pricing.plans.free.name,
+      en.landing.pricing.plans.pro.name,
+      en.landing.pricing.plans.business.name,
+    ]);
+    expect(plans[1].querySelectorAll('li').length).toBe(
+      en.landing.pricing.plans.pro.features.length,
+    );
+    expect(plans[1].classList.contains('featured')).toBe(true);
   });
 
   it('re-renders in Arabic when the language changes', async () => {
