@@ -28,7 +28,8 @@
     "profile": "الملف الشخصي",
     "toggleMenu": "إظهار أو إخفاء قائمة التنقل",
     "mainMenu": "القائمة الرئيسية",
-    "pricing": "الأسعار"
+    "pricing": "الأسعار",
+    "tickets": "التذاكر"
   },
   "roles": {
     "Owner": "مالك",
@@ -72,7 +73,17 @@
     "invitation-closed": "تم قبول هذه الدعوة أو إلغاؤها من قبل.",
     "team-not-found": "هذا الفريق لم يعد موجودًا.",
     "team-name-taken": "يوجد فريق بهذا الاسم بالفعل.",
-    "unknown-member": "أحد الأشخاص المحددين لم يعد ضمن مساحة العمل."
+    "unknown-member": "أحد الأشخاص المحددين لم يعد ضمن مساحة العمل.",
+    "ticket-not-found": "هذه التذكرة لم تعد موجودة.",
+    "ticket-closed": "لا يمكن تعديل تذكرة مغلقة.",
+    "requester-required": "أدخل البريد الإلكتروني للعميل.",
+    "unknown-requester": "العميل المحدد لم يعد موجودًا.",
+    "invalid-assignee": "يجب أن يكون المُسنَد إليه موظف دعم نشطًا في مساحة العمل.",
+    "unknown-team": "الفريق المحدد لم يعد موجودًا.",
+    "invalid-attachment": "تعذّر استخدام مرفق واحد أو أكثر. ارفعها مرة أخرى.",
+    "attachment-not-found": "هذا المرفق لم يعد متاحًا.",
+    "file-too-large": "الحد الأقصى لحجم الملف 10 ميغابايت.",
+    "file-type-blocked": "لا يمكن رفع هذا النوع من الملفات."
   },
   "landing": {
     "title": "دعم عملاء يديره فريقك بالكامل",
@@ -351,6 +362,135 @@
       "current": "كلمة المرور الحالية",
       "submit": "تغيير كلمة المرور",
       "changed": "تم تغيير كلمة المرور."
+    }
+  },
+  "ticketStatus": {
+    "New": "جديدة",
+    "Open": "مفتوحة",
+    "Pending": "بانتظار العميل",
+    "OnHold": "معلّقة",
+    "Solved": "محلولة",
+    "Closed": "مغلقة"
+  },
+  "ticketPriority": {
+    "Low": "منخفضة",
+    "Normal": "عادية",
+    "High": "مرتفعة",
+    "Urgent": "عاجلة"
+  },
+  "ticketType": {
+    "Question": "سؤال",
+    "Incident": "حادثة",
+    "Problem": "مشكلة",
+    "Task": "مهمة"
+  },
+  "ticketChannel": {
+    "Agent": "أنشأها موظف دعم",
+    "Portal": "بوابة العملاء",
+    "Email": "البريد الإلكتروني",
+    "Api": "واجهة API"
+  },
+  "tickets": {
+    "title": "التذاكر",
+    "subtitle": "كل طلبات العملاء في مكان واحد.",
+    "empty": "لا توجد تذاكر تطابق عوامل التصفية.",
+    "unassigned": "غير مُسنَدة",
+    "noTeam": "بلا فريق",
+    "fields": {
+      "subject": "الموضوع",
+      "requester": "صاحب الطلب",
+      "status": "الحالة",
+      "priority": "الأولوية",
+      "type": "النوع",
+      "assignee": "المُسنَد إليه",
+      "team": "الفريق",
+      "tags": "الوسوم",
+      "lastActivity": "آخر نشاط"
+    },
+    "filters": {
+      "anyone": "أي شخص",
+      "me": "أنا",
+      "unassigned": "غير مُسنَدة",
+      "anyTeam": "أي فريق"
+    },
+    "sort": {
+      "label": "الترتيب حسب",
+      "-lastActivityAt": "الأحدث تحديثًا",
+      "-createdAt": "الأحدث أولًا",
+      "createdAt": "الأقدم أولًا",
+      "-priority": "الأعلى أولوية",
+      "number": "رقم التذكرة"
+    },
+    "tags": {
+      "placeholder": "أضف وسمًا…",
+      "remove": "إزالة الوسم {{tag}}"
+    },
+    "attachments": {
+      "title": "المرفقات",
+      "add": "إرفاق ملفات",
+      "uploading": "جارٍ الرفع",
+      "remove": "إزالة {{name}}"
+    },
+    "new": {
+      "open": "تذكرة جديدة",
+      "title": "تذكرة جديدة",
+      "subtitle": "سجّل طلبًا وصلك عبر الهاتف أو المحادثة أو وجهًا لوجه.",
+      "requesterEmail": "بريد العميل الإلكتروني",
+      "requesterHint": "ابدأ الكتابة للعثور على عميل موجود.",
+      "requesterName": "اسم العميل (اختياري)",
+      "description": "الوصف",
+      "submit": "إنشاء التذكرة",
+      "created": "تم إنشاء التذكرة رقم {{number}}."
+    },
+    "detail": {
+      "back": "كل التذاكر",
+      "openedBy": "فتحها {{name}} {{when}}",
+      "watch": "متابعة",
+      "unwatch": "إيقاف المتابعة",
+      "rename": "تعديل الموضوع",
+      "delete": "حذف التذكرة",
+      "deleteTitle": "حذف التذكرة رقم {{number}}؟",
+      "deleteBody": "ستختفي التذكرة من كل القوائم، ولن يُعاد استخدام رقمها.",
+      "deleted": "تم حذف التذكرة رقم {{number}}.",
+      "closedNotice": "هذه التذكرة مغلقة ولا يمكن تعديلها.",
+      "properties": "خصائص التذكرة",
+      "created": "تاريخ الإنشاء",
+      "firstResponse": "أول رد",
+      "solved": "تاريخ الحل",
+      "watchers": "المتابعون",
+      "notFoundTitle": "التذكرة غير موجودة",
+      "notFoundBody": "ربما حُذفت، أو أن الرابط غير صحيح."
+    },
+    "composer": {
+      "mode": "نوع الرسالة",
+      "reply": "رد عام",
+      "note": "ملاحظة داخلية",
+      "replyPlaceholder": "الرد على {{name}}",
+      "notePlaceholder": "ملاحظة لفريقك؛ لن يراها العميل",
+      "submitAs": "ثم غيّر الحالة إلى",
+      "keepStatus": "إبقاء الحالة الحالية",
+      "send": "إرسال الرد",
+      "addNote": "إضافة ملاحظة"
+    },
+    "timeline": {
+      "label": "المحادثة وسجل التغييرات",
+      "internalNote": "ملاحظة داخلية",
+      "none": "لا شيء",
+      "actors": {
+        "Staff": "موظف دعم",
+        "Customer": "العميل",
+        "System": "NexDesk"
+      },
+      "events": {
+        "Created": "أنشأ {{actor}} التذكرة",
+        "SubjectChanged": "غيّر {{actor}} الموضوع من «{{from}}» إلى «{{to}}»",
+        "StatusChanged": "غيّر {{actor}} الحالة من {{from}} إلى {{to}}",
+        "PriorityChanged": "غيّر {{actor}} الأولوية من {{from}} إلى {{to}}",
+        "TypeChanged": "غيّر {{actor}} النوع من {{from}} إلى {{to}}",
+        "AssigneeChanged": "غيّر {{actor}} المُسنَد إليه من {{from}} إلى {{to}}",
+        "TeamChanged": "غيّر {{actor}} الفريق من {{from}} إلى {{to}}",
+        "TagsChanged": "غيّر {{actor}} الوسوم من {{from}} إلى {{to}}"
+      }
     }
   }
 }

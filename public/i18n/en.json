@@ -28,7 +28,8 @@
     "profile": "Profile",
     "toggleMenu": "Toggle navigation menu",
     "mainMenu": "Main menu",
-    "pricing": "Pricing"
+    "pricing": "Pricing",
+    "tickets": "Tickets"
   },
   "roles": {
     "Owner": "Owner",
@@ -72,7 +73,17 @@
     "invitation-closed": "This invitation was already accepted or revoked.",
     "team-not-found": "This team no longer exists.",
     "team-name-taken": "A team with this name already exists.",
-    "unknown-member": "One of the selected people is no longer in this workspace."
+    "unknown-member": "One of the selected people is no longer in this workspace.",
+    "ticket-not-found": "This ticket no longer exists.",
+    "ticket-closed": "A closed ticket cannot be changed.",
+    "requester-required": "Enter the email address of the customer.",
+    "unknown-requester": "The selected customer no longer exists.",
+    "invalid-assignee": "The assignee must be an active agent of this workspace.",
+    "unknown-team": "The selected team no longer exists.",
+    "invalid-attachment": "One or more attachments could not be used. Upload them again.",
+    "attachment-not-found": "This attachment is no longer available.",
+    "file-too-large": "Files can be at most 10 MB.",
+    "file-type-blocked": "This type of file cannot be uploaded."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -351,6 +362,135 @@
       "current": "Current password",
       "submit": "Change password",
       "changed": "Password changed."
+    }
+  },
+  "ticketStatus": {
+    "New": "New",
+    "Open": "Open",
+    "Pending": "Pending",
+    "OnHold": "On hold",
+    "Solved": "Solved",
+    "Closed": "Closed"
+  },
+  "ticketPriority": {
+    "Low": "Low",
+    "Normal": "Normal",
+    "High": "High",
+    "Urgent": "Urgent"
+  },
+  "ticketType": {
+    "Question": "Question",
+    "Incident": "Incident",
+    "Problem": "Problem",
+    "Task": "Task"
+  },
+  "ticketChannel": {
+    "Agent": "Created by an agent",
+    "Portal": "Customer portal",
+    "Email": "Email",
+    "Api": "API"
+  },
+  "tickets": {
+    "title": "Tickets",
+    "subtitle": "Every customer request in one place.",
+    "empty": "No tickets match these filters.",
+    "unassigned": "Unassigned",
+    "noTeam": "No team",
+    "fields": {
+      "subject": "Subject",
+      "requester": "Requester",
+      "status": "Status",
+      "priority": "Priority",
+      "type": "Type",
+      "assignee": "Assignee",
+      "team": "Team",
+      "tags": "Tags",
+      "lastActivity": "Last activity"
+    },
+    "filters": {
+      "anyone": "Anyone",
+      "me": "Me",
+      "unassigned": "Unassigned",
+      "anyTeam": "Any team"
+    },
+    "sort": {
+      "label": "Sort by",
+      "-lastActivityAt": "Recently updated",
+      "-createdAt": "Newest first",
+      "createdAt": "Oldest first",
+      "-priority": "Highest priority",
+      "number": "Ticket number"
+    },
+    "tags": {
+      "placeholder": "Add a tag…",
+      "remove": "Remove tag {{tag}}"
+    },
+    "attachments": {
+      "title": "Attachments",
+      "add": "Attach files",
+      "uploading": "Uploading",
+      "remove": "Remove {{name}}"
+    },
+    "new": {
+      "open": "New ticket",
+      "title": "New ticket",
+      "subtitle": "Record a request you received by phone, chat or in person.",
+      "requesterEmail": "Customer email",
+      "requesterHint": "Start typing to find an existing customer.",
+      "requesterName": "Customer name (optional)",
+      "description": "Description",
+      "submit": "Create ticket",
+      "created": "Ticket #{{number}} created."
+    },
+    "detail": {
+      "back": "All tickets",
+      "openedBy": "Opened by {{name}} {{when}}",
+      "watch": "Watch",
+      "unwatch": "Stop watching",
+      "rename": "Edit subject",
+      "delete": "Delete ticket",
+      "deleteTitle": "Delete ticket #{{number}}?",
+      "deleteBody": "The ticket disappears from every list. Its number is not reused.",
+      "deleted": "Ticket #{{number}} was deleted.",
+      "closedNotice": "This ticket is closed and can no longer be changed.",
+      "properties": "Ticket properties",
+      "created": "Created",
+      "firstResponse": "First response",
+      "solved": "Solved",
+      "watchers": "Watchers",
+      "notFoundTitle": "Ticket not found",
+      "notFoundBody": "It may have been deleted, or the link is wrong."
+    },
+    "composer": {
+      "mode": "Message type",
+      "reply": "Public reply",
+      "note": "Internal note",
+      "replyPlaceholder": "Reply to {{name}}",
+      "notePlaceholder": "Note for your team; the customer will not see it",
+      "submitAs": "Then set status to",
+      "keepStatus": "Keep current status",
+      "send": "Send reply",
+      "addNote": "Add note"
+    },
+    "timeline": {
+      "label": "Conversation and history",
+      "internalNote": "Internal note",
+      "none": "none",
+      "actors": {
+        "Staff": "An agent",
+        "Customer": "The customer",
+        "System": "NexDesk"
+      },
+      "events": {
+        "Created": "{{actor}} created the ticket",
+        "SubjectChanged": "{{actor}} changed the subject from “{{from}}” to “{{to}}”",
+        "StatusChanged": "{{actor}} changed the status from {{from}} to {{to}}",
+        "PriorityChanged": "{{actor}} changed the priority from {{from}} to {{to}}",
+        "TypeChanged": "{{actor}} changed the type from {{from}} to {{to}}",
+        "AssigneeChanged": "{{actor}} changed the assignee from {{from}} to {{to}}",
+        "TeamChanged": "{{actor}} changed the team from {{from}} to {{to}}",
+        "TagsChanged": "{{actor}} changed the tags from {{from}} to {{to}}"
+      }
     }
   }
 }
