@@ -1,7 +1,5 @@
 # NexDesk Web
 
-[![CI](https://github.com/mahmoudadel810/nexdesk-web/actions/workflows/ci.yml/badge.svg)](https://github.com/mahmoudadel810/nexdesk-web/actions/workflows/ci.yml)
-
 Web client for **NexDesk**, a multi-tenant help desk and SLA management SaaS. The API lives in
 [nexdesk-api](https://github.com/mahmoudadel810/nexdesk-api).
 
