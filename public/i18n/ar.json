@@ -32,7 +32,8 @@
     "tickets": "التذاكر",
     "customFields": "الحقول المخصصة",
     "sla": "اتفاقية مستوى الخدمة",
-    "knowledgeBase": "قاعدة المعرفة"
+    "knowledgeBase": "قاعدة المعرفة",
+    "automation": "الأتمتة"
   },
   "roles": {
     "Owner": "مالك",
@@ -108,7 +109,11 @@
     "kb-article-not-found": "هذه المقالة لم تعد موجودة.",
     "kb-category-name-taken": "يوجد تصنيف بهذا الاسم بالفعل.",
     "kb-category-not-empty": "انقل مقالات هذا التصنيف أو احذفها أولًا.",
-    "kb-unknown-category": "اختر تصنيفًا موجودًا."
+    "kb-unknown-category": "اختر تصنيفًا موجودًا.",
+    "automation-rule-not-found": "هذه القاعدة لم تعد موجودة.",
+    "automation-invalid-condition": "أحد الشروط غير صالح. راجع قيمه وحاول مجددًا.",
+    "automation-invalid-action": "أحد الإجراءات غير صالح. راجع قيمه وحاول مجددًا.",
+    "automation-time-rule-needs-duration": "القاعدة المجدولة تحتاج شرطًا يقيس الساعات، ويجب أن تتحقق كل الشروط."
   },
   "landing": {
     "title": "دعم عملاء يديره فريقك بالكامل",
@@ -399,7 +404,8 @@
         "TicketReply": "رد على تذكرة أتابعها",
         "TicketNote": "ملاحظة داخلية على تذكرة أتابعها",
         "SlaWarning": "اقتراب موعد إحدى تذاكري",
-        "SlaBreach": "تجاوز أحد المواعيد"
+        "SlaBreach": "تجاوز أحد المواعيد",
+        "Automation": "عندما تنبّهني قاعدة أتمتة"
       }
     }
   },
@@ -682,7 +688,8 @@
       "TicketReply": "ردّ {{actor}} على التذكرة رقم {{number}}",
       "TicketNote": "أضاف {{actor}} ملاحظة على التذكرة رقم {{number}}",
       "SlaWarning": "التذكرة رقم {{number}} تقترب من موعد {{metric}}",
-      "SlaBreach": "التذكرة رقم {{number}} تجاوزت موعد {{metric}}"
+      "SlaBreach": "التذكرة رقم {{number}} تجاوزت موعد {{metric}}",
+      "Automation": "{{actor}}: التذكرة رقم {{number}}"
     }
   },
   "kb": {
@@ -757,6 +764,130 @@
       "title": "حذف «{{title}}»؟",
       "body": "ستختفي المقالة من مركز المساعدة ولا يمكن استعادتها.",
       "done": "تم حذف المقالة."
+    }
+  },
+  "automation": {
+    "title": "الأتمتة",
+    "subtitle": "قواعد توجّه التذاكر وتحدّثها وتتابعها بدلًا منك.",
+    "newRule": "قاعدة جديدة",
+    "emptyTitle": "لا توجد قواعد بعد",
+    "emptyBody": "أنشئ قاعدة لإسناد التذاكر الجديدة أو متابعة العملاء المنتظرين أو التنبيه إلى التذاكر المهملة.",
+    "back": "العودة إلى الأتمتة",
+    "notFoundTitle": "القاعدة غير موجودة",
+    "notFoundBody": "ربما تم حذفها.",
+    "triggers": {
+      "TicketCreated": "عند إنشاء تذكرة",
+      "TicketUpdated": "عند تحديث تذكرة",
+      "TimeBased": "وفق جدول، بعد مدة انتظار"
+    },
+    "summary": "الشروط: {{conditions}} · الإجراءات: {{actions}}",
+    "ran": "مرات التشغيل: {{count}}",
+    "lastRun": "آخر تشغيل",
+    "neverRan": "لم تعمل بعد.",
+    "on": "مفعّلة",
+    "off": "متوقفة",
+    "enabledLabel": "تشغيل أو إيقاف {{name}}",
+    "match": {
+      "All": "يجب تحقق كل الشروط",
+      "Any": "يكفي تحقق أي شرط"
+    },
+    "fields": {
+      "Status": "الحالة",
+      "Priority": "الأولوية",
+      "Type": "النوع",
+      "Channel": "القناة",
+      "Assignee": "المسؤول",
+      "Team": "الفريق",
+      "Tags": "الوسوم",
+      "Subject": "الموضوع",
+      "HoursSinceLastActivity": "الساعات منذ آخر نشاط",
+      "HoursSinceCreated": "الساعات منذ الإنشاء"
+    },
+    "operators": {
+      "Is": "يساوي",
+      "IsNot": "لا يساوي",
+      "Contains": "يحتوي على",
+      "NotContains": "لا يحتوي على",
+      "AtLeast": "لا يقل عن",
+      "Changed": "تم تغييره"
+    },
+    "actions": {
+      "AssignUser": "إسناد إلى شخص",
+      "AssignTeam": "إسناد إلى فريق",
+      "SetPriority": "تعيين الأولوية",
+      "SetStatus": "تعيين الحالة",
+      "AddTag": "إضافة وسم",
+      "SendEmail": "مراسلة العميل بالبريد",
+      "Notify": "تنبيه أعضاء الفريق"
+    },
+    "audience": {
+      "assignee": "المسؤول عن التذكرة",
+      "admins": "كل المشرفين"
+    },
+    "steps": {
+      "AssignUser": "أُسندت إلى {{value}}",
+      "AssignTeam": "وُجّهت إلى {{value}}",
+      "SetPriority": "عُيّنت الأولوية: {{value}}",
+      "SetStatus": "عُيّنت الحالة: {{value}}",
+      "AddTag": "أُضيف الوسم «{{value}}»",
+      "SendEmail": "أُرسل بريد إلى العميل: {{value}}",
+      "Notify": "تم تنبيه: {{value}}"
+    },
+    "outcome": {
+      "Applied": "نُفّذت",
+      "Partial": "نُفّذت جزئيًا",
+      "Failed": "لم تُنفّذ"
+    },
+    "log": {
+      "open": "السجل",
+      "title": "مرات تشغيل «{{name}}»",
+      "empty": "لم تعمل هذه القاعدة بعد.",
+      "skipped": "تم تخطيه",
+      "more": "عرض المزيد"
+    },
+    "delete": {
+      "title": "حذف «{{name}}»؟",
+      "body": "ستتوقف القاعدة عن العمل ويُحذف سجلها.",
+      "done": "تم حذف القاعدة."
+    },
+    "editor": {
+      "newTitle": "قاعدة جديدة",
+      "editTitle": "تعديل القاعدة",
+      "subtitle": "اختر متى تعمل القاعدة، وما الذي يجب أن يتحقق، وماذا تفعل.",
+      "name": "اسم القاعدة",
+      "trigger": "تعمل",
+      "timeHint": "تُفحص كل خمس دقائق. تُتجاوز التذاكر المحلولة ما لم يحدّد أحد الشروط حالة.",
+      "position": "الترتيب",
+      "positionHint": "الأصغر يعمل أولًا.",
+      "enabled": "القاعدة مفعّلة",
+      "conditions": "الشروط",
+      "conditionsHint": "اتركها فارغة لتعمل على كل تذكرة.",
+      "noConditions": "لا توجد شروط: تعمل القاعدة على كل تذكرة.",
+      "match": "المطابقة",
+      "conditionLabel": "الشرط {{number}}",
+      "field": "الحقل",
+      "operator": "المقارنة",
+      "value": "القيمة",
+      "hours": "الساعات",
+      "unassigned": "لا أحد (غير مسندة)",
+      "noTeam": "بلا فريق",
+      "addCondition": "إضافة شرط",
+      "removeCondition": "حذف الشرط {{number}}",
+      "actions": "الإجراءات",
+      "actionsHint": "تُنفّذ بهذا الترتيب.",
+      "actionLabel": "الإجراء {{number}}",
+      "action": "الإجراء",
+      "tag": "الوسم",
+      "emailSubject": "موضوع البريد",
+      "emailBody": "نص البريد",
+      "message": "الرسالة",
+      "audience": "من يتم تنبيهه",
+      "placeholders": "يمكنك استخدام هذه المتغيّرات:",
+      "addAction": "إضافة إجراء",
+      "removeAction": "حذف الإجراء {{number}}",
+      "needsAction": "أضف إجراءً واحدًا على الأقل.",
+      "incomplete": "أكمل الأجزاء المميّزة من القاعدة.",
+      "saved": "تم حفظ {{name}}."
     }
   },
   "portal": {

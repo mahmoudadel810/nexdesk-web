@@ -132,6 +132,34 @@ export const routes: Routes = [
         title: 'NexDesk',
       },
       {
+        path: 'settings/automation',
+        canActivate: [permissionGuard('automation.manage')],
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            loadComponent: () => import('./features/settings/automation').then((m) => m.Automation),
+            title: 'NexDesk',
+          },
+          {
+            path: 'new',
+            loadComponent: () =>
+              import('./features/settings/automation-rule-editor').then(
+                (m) => m.AutomationRuleEditor,
+              ),
+            title: 'NexDesk',
+          },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./features/settings/automation-rule-editor').then(
+                (m) => m.AutomationRuleEditor,
+              ),
+            title: 'NexDesk',
+          },
+        ],
+      },
+      {
         path: 'settings/custom-fields',
         canActivate: [permissionGuard('custom-fields.manage')],
         loadComponent: () =>

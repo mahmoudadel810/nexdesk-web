@@ -32,7 +32,8 @@
     "tickets": "Tickets",
     "customFields": "Custom fields",
     "sla": "SLA",
-    "knowledgeBase": "Knowledge base"
+    "knowledgeBase": "Knowledge base",
+    "automation": "Automation"
   },
   "roles": {
     "Owner": "Owner",
@@ -108,7 +109,11 @@
     "kb-article-not-found": "This article no longer exists.",
     "kb-category-name-taken": "A category with this name already exists.",
     "kb-category-not-empty": "Move or delete the articles in this category first.",
-    "kb-unknown-category": "Choose an existing category."
+    "kb-unknown-category": "Choose an existing category.",
+    "automation-rule-not-found": "This rule no longer exists.",
+    "automation-invalid-condition": "One of the conditions is not valid. Check its values and try again.",
+    "automation-invalid-action": "One of the actions is not valid. Check its values and try again.",
+    "automation-time-rule-needs-duration": "A scheduled rule needs a condition that measures hours, and all conditions must match."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -399,7 +404,8 @@
         "TicketReply": "Someone replies on a ticket I follow",
         "TicketNote": "Someone adds an internal note on a ticket I follow",
         "SlaWarning": "A deadline of my ticket is close",
-        "SlaBreach": "A deadline is missed"
+        "SlaBreach": "A deadline is missed",
+        "Automation": "An automation rule notifies me"
       }
     }
   },
@@ -682,7 +688,8 @@
       "TicketReply": "{{actor}} replied on ticket #{{number}}",
       "TicketNote": "{{actor}} added a note on ticket #{{number}}",
       "SlaWarning": "Ticket #{{number}} is close to its {{metric}} deadline",
-      "SlaBreach": "Ticket #{{number}} missed its {{metric}} deadline"
+      "SlaBreach": "Ticket #{{number}} missed its {{metric}} deadline",
+      "Automation": "{{actor}}: ticket #{{number}}"
     }
   },
   "kb": {
@@ -757,6 +764,130 @@
       "title": "Delete \"{{title}}\"?",
       "body": "The article disappears from the help centre and cannot be restored.",
       "done": "Article deleted."
+    }
+  },
+  "automation": {
+    "title": "Automation",
+    "subtitle": "Rules that route, update and follow up on tickets for you.",
+    "newRule": "New rule",
+    "emptyTitle": "No rules yet",
+    "emptyBody": "Create a rule to assign new tickets, chase waiting customers or flag tickets nobody touched.",
+    "back": "Back to automation",
+    "notFoundTitle": "Rule not found",
+    "notFoundBody": "It may have been deleted.",
+    "triggers": {
+      "TicketCreated": "When a ticket is created",
+      "TicketUpdated": "When a ticket is updated",
+      "TimeBased": "On a schedule, after a waiting time"
+    },
+    "summary": "Conditions: {{conditions}} · Actions: {{actions}}",
+    "ran": "Runs: {{count}}",
+    "lastRun": "last run",
+    "neverRan": "Has not run yet.",
+    "on": "On",
+    "off": "Off",
+    "enabledLabel": "Turn {{name}} on or off",
+    "match": {
+      "All": "All conditions must match",
+      "Any": "Any condition may match"
+    },
+    "fields": {
+      "Status": "Status",
+      "Priority": "Priority",
+      "Type": "Type",
+      "Channel": "Channel",
+      "Assignee": "Assignee",
+      "Team": "Team",
+      "Tags": "Tags",
+      "Subject": "Subject",
+      "HoursSinceLastActivity": "Hours since last activity",
+      "HoursSinceCreated": "Hours since created"
+    },
+    "operators": {
+      "Is": "is",
+      "IsNot": "is not",
+      "Contains": "contains",
+      "NotContains": "does not contain",
+      "AtLeast": "is at least",
+      "Changed": "was changed"
+    },
+    "actions": {
+      "AssignUser": "Assign to a person",
+      "AssignTeam": "Assign to a team",
+      "SetPriority": "Set priority",
+      "SetStatus": "Set status",
+      "AddTag": "Add a tag",
+      "SendEmail": "Email the customer",
+      "Notify": "Notify team members"
+    },
+    "audience": {
+      "assignee": "The assignee",
+      "admins": "All admins"
+    },
+    "steps": {
+      "AssignUser": "Assigned to {{value}}",
+      "AssignTeam": "Routed to {{value}}",
+      "SetPriority": "Priority set to {{value}}",
+      "SetStatus": "Status set to {{value}}",
+      "AddTag": "Tag “{{value}}” added",
+      "SendEmail": "Email sent to the customer: {{value}}",
+      "Notify": "Notified: {{value}}"
+    },
+    "outcome": {
+      "Applied": "Applied",
+      "Partial": "Partly applied",
+      "Failed": "Not applied"
+    },
+    "log": {
+      "open": "Log",
+      "title": "Runs of “{{name}}”",
+      "empty": "This rule has not run yet.",
+      "skipped": "skipped",
+      "more": "Show more"
+    },
+    "delete": {
+      "title": "Delete “{{name}}”?",
+      "body": "The rule stops running and its log is removed.",
+      "done": "Rule deleted."
+    },
+    "editor": {
+      "newTitle": "New rule",
+      "editTitle": "Edit rule",
+      "subtitle": "Choose when the rule runs, what must be true, and what it does.",
+      "name": "Rule name",
+      "trigger": "Runs",
+      "timeHint": "Checked every five minutes. Solved tickets are skipped unless a condition names a status.",
+      "position": "Order",
+      "positionHint": "Lower runs first.",
+      "enabled": "Rule is on",
+      "conditions": "Conditions",
+      "conditionsHint": "Leave empty to run on every ticket.",
+      "noConditions": "No conditions: the rule runs on every ticket.",
+      "match": "Match",
+      "conditionLabel": "Condition {{number}}",
+      "field": "Field",
+      "operator": "Comparison",
+      "value": "Value",
+      "hours": "Hours",
+      "unassigned": "Nobody (unassigned)",
+      "noTeam": "No team",
+      "addCondition": "Add condition",
+      "removeCondition": "Remove condition {{number}}",
+      "actions": "Actions",
+      "actionsHint": "Carried out in this order.",
+      "actionLabel": "Action {{number}}",
+      "action": "Action",
+      "tag": "Tag",
+      "emailSubject": "Email subject",
+      "emailBody": "Email text",
+      "message": "Message",
+      "audience": "Who to notify",
+      "placeholders": "You can use these placeholders:",
+      "addAction": "Add action",
+      "removeAction": "Remove action {{number}}",
+      "needsAction": "Add at least one action.",
+      "incomplete": "Complete the highlighted parts of the rule.",
+      "saved": "{{name}} saved."
     }
   },
   "portal": {

@@ -47,6 +47,12 @@ const NAV_ITEMS: readonly NavItem[] = [
   { path: '/app/teams', icon: 'diversity_3', label: 'nav.teams', permission: 'users.view' },
   { path: '/app/settings/sla', icon: 'timer', label: 'nav.sla', permission: 'sla.manage' },
   {
+    path: '/app/settings/automation',
+    icon: 'bolt',
+    label: 'nav.automation',
+    permission: 'automation.manage',
+  },
+  {
     path: '/app/settings/custom-fields',
     icon: 'tune',
     label: 'nav.customFields',

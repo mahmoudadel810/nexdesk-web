@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { Paged } from './workspace.api';
 
 export type NotificationType =
-  'TicketAssigned' | 'TicketReply' | 'TicketNote' | 'SlaWarning' | 'SlaBreach';
+  'TicketAssigned' | 'TicketReply' | 'TicketNote' | 'SlaWarning' | 'SlaBreach' | 'Automation';
 
 export const NOTIFICATION_TYPES: readonly NotificationType[] = [
   'TicketAssigned',
@@ -13,6 +13,7 @@ export const NOTIFICATION_TYPES: readonly NotificationType[] = [
   'TicketNote',
   'SlaWarning',
   'SlaBreach',
+  'Automation',
 ];
 
 export interface AppNotification {
