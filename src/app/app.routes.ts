@@ -120,5 +120,9 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'portal',
+    loadChildren: () => import('./portal/portal.routes').then((m) => m.portalRoutes),
+  },
   { path: '**', redirectTo: '' },
 ];

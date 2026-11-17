@@ -325,6 +325,15 @@ type ReplyMode = 'reply' | 'note';
               <dt>{{ 'tickets.detail.solved' | transloco }}</dt>
               <dd>{{ ticket.solvedAt | localDate }}</dd>
             }
+            @if (ticket.csat; as csat) {
+              <dt>{{ 'tickets.detail.csat' | transloco }}</dt>
+              <dd>
+                <span>{{ 'tickets.detail.csatRating' | transloco: { rating: csat.rating } }}</span>
+                @if (csat.comment) {
+                  <span dir="auto">“{{ csat.comment }}”</span>
+                }
+              </dd>
+            }
             <dt>{{ 'tickets.detail.watchers' | transloco }}</dt>
             <dd>
               @for (watcher of ticket.watchers; track watcher.id) {

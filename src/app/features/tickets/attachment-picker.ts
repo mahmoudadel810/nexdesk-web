@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, model, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { Observable } from 'rxjs';
 import { Attachment, TicketsApi } from '../../core/api/tickets.api';
 import { toProblem } from '../../core/http/problem';
 import { Notifier } from '../../core/ui/notifier';
@@ -105,6 +106,11 @@ export class AttachmentPicker {
 
   readonly attachments = model<readonly Attachment[]>([]);
 
+  /** How a file is uploaded. Defaults to the staff endpoint; the help centre passes its own. */
+  readonly uploader = input<(file: File) => Observable<Attachment>>((file) =>
+    this.api.upload(file),
+  );
+
   protected readonly max = MAX_ATTACHMENTS;
   protected readonly uploading = signal(0);
 
@@ -119,7 +125,7 @@ export class AttachmentPicker {
       }
 
       this.uploading.update((count) => count + 1);
-      this.api.upload(file).subscribe({
+      this.uploader()(file).subscribe({
         next: (attachment) => {
           this.attachments.update((current) => [...current, attachment]);
           this.uploading.update((count) => count - 1);

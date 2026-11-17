@@ -201,6 +201,8 @@ export class TicketTimeline {
         return 'merge';
       case 'SlaBreached':
         return 'error';
+      case 'CsatSubmitted':
+        return 'star';
       default:
         return 'edit';
     }
