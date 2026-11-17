@@ -717,7 +717,7 @@
       "manage": "Categories",
       "title": "Categories",
       "lead": "Categories group articles in the help centre. A category shows up there once it has a published article.",
-      "articleCount": "{{count}} articles",
+      "articleCount": "Articles: {{count}}",
       "empty": "No categories yet.",
       "edit": "Edit {{name}}",
       "delete": "Delete {{name}}",
@@ -777,7 +777,7 @@
     },
     "welcome": {
       "title": "How can {{name}} help?",
-      "body": "Search our help articles, or send us a request and follow the conversation here.",
+      "body": "Send us a request and follow the conversation here. We will also keep you posted by email.",
       "contactTitle": "Can't find what you need?"
     },
     "login": {
@@ -834,7 +834,7 @@
     "kb": {
       "search": "Search help articles",
       "results": "Search results",
-      "resultCount": "{{count}} articles found",
+      "resultCount": "Articles found: {{count}}",
       "noResults": "Nothing matches. Try other words, or send us a request.",
       "suggestionsTitle": "These articles might answer your question",
       "back": "Help centre",
@@ -845,7 +845,8 @@
       "feedbackThanks": "Thanks for your feedback.",
       "yes": "Yes",
       "no": "No",
-      "stillNeedHelp": "Still need help?"
+      "stillNeedHelp": "Still need help?",
+      "browseTitle": "Browse help articles"
     }
   }
 }

@@ -42,6 +42,7 @@ interface ArticleGroup {
   ],
   template: `
     @if (hasArticles()) {
+      <h2 class="visually-hidden">{{ 'portal.kb.browseTitle' | transloco }}</h2>
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search">
         <mat-label>{{ 'portal.kb.search' | transloco }}</mat-label>
         <mat-icon matPrefix aria-hidden="true">search</mat-icon>
@@ -50,7 +51,7 @@ interface ArticleGroup {
 
       @if (results(); as found) {
         <section [attr.aria-label]="'portal.kb.results' | transloco" aria-live="polite">
-          <h2>{{ 'portal.kb.resultCount' | transloco: { count: found.length } }}</h2>
+          <h3>{{ 'portal.kb.resultCount' | transloco: { count: found.length } }}</h3>
           @if (found.length === 0) {
             <p class="none">{{ 'portal.kb.noResults' | transloco }}</p>
           }
@@ -68,7 +69,7 @@ interface ArticleGroup {
         <div class="groups">
           @for (group of groups(); track group.name) {
             <section>
-              <h2>{{ group.name }}</h2>
+              <h3>{{ group.name }}</h3>
               @if (group.description) {
                 <p class="description">{{ group.description }}</p>
               }
@@ -96,7 +97,7 @@ interface ArticleGroup {
       margin: 0 auto 32px;
     }
 
-    h2 {
+    h3 {
       font: var(--mat-sys-title-medium);
       margin: 0 0 8px;
     }

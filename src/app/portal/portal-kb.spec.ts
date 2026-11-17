@@ -57,7 +57,7 @@ describe('Help centre articles', () => {
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
 
-    expect(element.querySelector('.groups h2')?.textContent).toContain('Billing');
+    expect(element.querySelector('.groups h3')?.textContent).toContain('Billing');
     expect(element.querySelector('.links a')?.getAttribute('href')).toBe(
       '/portal/acme/kb/how-to-download-an-invoice',
     );
