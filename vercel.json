@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/nexdesk-web/browser",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://nexdesk-api.onrender.com/api/:path*" },
+    { "source": "/hubs/:path*", "destination": "https://nexdesk-api.onrender.com/hubs/:path*" },
+    { "source": "/docs/:path*", "destination": "https://nexdesk-api.onrender.com/docs/:path*" },
+    { "source": "/docs", "destination": "https://nexdesk-api.onrender.com/docs" },
+    { "source": "/openapi/:path*", "destination": "https://nexdesk-api.onrender.com/openapi/:path*" },
+    { "source": "/hangfire/:path*", "destination": "https://nexdesk-api.onrender.com/hangfire/:path*" },
+    { "source": "/hangfire", "destination": "https://nexdesk-api.onrender.com/hangfire" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    { "source": "/i18n/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+  ]
+}
