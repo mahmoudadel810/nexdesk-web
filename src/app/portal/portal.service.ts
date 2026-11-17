@@ -1,6 +1,16 @@
 import { HttpClient, HttpContext, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, defer, finalize, firstValueFrom, map, shareReplay } from 'rxjs';
+import {
+  MonoTypeOperatorFunction,
+  Observable,
+  catchError,
+  defer,
+  finalize,
+  firstValueFrom,
+  map,
+  shareReplay,
+  throwError,
+} from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Attachment, TicketStatus } from '../core/api/tickets.api';
 import { Paged } from '../core/api/workspace.api';
@@ -103,6 +113,28 @@ function open(): { context: HttpContext } {
 
 function inline(): { context: HttpContext } {
   return { context: new HttpContext().set(SKIP_ERROR_TOAST, true) };
+}
+
+/** The code the help centre shows when the workspace cannot take something in. */
+export const PORTAL_UNAVAILABLE = 'portal-unavailable';
+
+/**
+ * A workspace that ran out of a plan allowance answers 402 with advice to upgrade. That advice is for
+ * its staff; a customer only needs to know that the help centre cannot take this right now.
+ */
+function forCustomers<T>(): MonoTypeOperatorFunction<T> {
+  return catchError((error: unknown) =>
+    throwError(() =>
+      error instanceof HttpErrorResponse && error.status === 402
+        ? new HttpErrorResponse({
+            status: error.status,
+            statusText: error.statusText,
+            url: error.url ?? undefined,
+            error: { code: PORTAL_UNAVAILABLE },
+          })
+        : error,
+    ),
+  );
 }
 
 /**
@@ -226,11 +258,13 @@ export class PortalService {
     description: string,
     attachmentIds: readonly string[],
   ): Observable<PortalTicket> {
-    return this.http.post<PortalTicket>(
-      this.url(slug, '/tickets'),
-      { subject, description, attachmentIds },
-      inline(),
-    );
+    return this.http
+      .post<PortalTicket>(
+        this.url(slug, '/tickets'),
+        { subject, description, attachmentIds },
+        inline(),
+      )
+      .pipe(forCustomers());
   }
 
   reply(
@@ -239,11 +273,13 @@ export class PortalService {
     body: string,
     attachmentIds: readonly string[],
   ): Observable<PortalTicket> {
-    return this.http.post<PortalTicket>(
-      this.url(slug, `/tickets/${ticketId}/replies`),
-      { body, attachmentIds },
-      inline(),
-    );
+    return this.http
+      .post<PortalTicket>(
+        this.url(slug, `/tickets/${ticketId}/replies`),
+        { body, attachmentIds },
+        inline(),
+      )
+      .pipe(forCustomers());
   }
 
   rate(
@@ -261,7 +297,9 @@ export class PortalService {
   upload(slug: string, file: File): Observable<Attachment> {
     const form = new FormData();
     form.append('file', file, file.name);
-    return this.http.post<Attachment>(this.url(slug, '/attachments'), form, inline());
+    return this.http
+      .post<Attachment>(this.url(slug, '/attachments'), form, inline())
+      .pipe(forCustomers());
   }
 
   download(slug: string, attachmentId: string): Observable<Blob> {

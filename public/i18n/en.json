@@ -127,7 +127,8 @@
     "card-declined": "The card was declined. Try another card.",
     "downgrade-agents": "This plan allows fewer team members than you have. Deactivate people or revoke invitations first.",
     "downgrade-storage": "Your attachments need more storage than this plan includes.",
-    "downgrade-automation": "This plan allows fewer automation rules than you have. Delete some rules first."
+    "downgrade-automation": "This plan allows fewer automation rules than you have. Delete some rules first.",
+    "portal-unavailable": "We cannot take this in right now. Please contact us another way."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -940,7 +941,7 @@
       "automationUnlimited": "Unlimited automation rules",
       "api": "API keys and outbound webhooks",
       "noApi": "No API access",
-      "requests": "API requests per minute: {{count}}"
+      "requests": "API requests per team member, per minute: {{count}}"
     },
     "invoices": {
       "title": "Invoices",
@@ -1024,8 +1025,7 @@
       "send": "Send reply",
       "closed": "This request is closed. Send a new request if you need more help.",
       "notFoundTitle": "Request not found",
-      "notFoundBody": "It may belong to another account, or the link is wrong.",
-      "unavailable": "We cannot take new requests here right now. Please contact us another way."
+      "notFoundBody": "It may belong to another account, or the link is wrong."
     },
     "csat": {
       "title": "How did we do?",
