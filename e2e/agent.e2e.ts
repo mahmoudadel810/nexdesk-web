@@ -7,6 +7,7 @@ test('an agent records a ticket, adds a note and finds it again', async ({ page 
 
   await openMenu(page, 'Tickets');
   await page.getByRole('link', { name: 'New ticket' }).click();
+  await expect(page.getByRole('heading', { name: 'New ticket' })).toBeVisible();
   await page.getByLabel('Subject').fill(subject);
   await page.getByLabel('Description').fill('The printer on floor 3 jams on every second page.');
   await page.getByLabel('Customer email').fill('e2e.customer@customers.demo');
@@ -14,11 +15,18 @@ test('an agent records a ticket, adds a note and finds it again', async ({ page 
 
   await expect(page.getByRole('heading', { name: subject })).toBeVisible();
   await page.getByRole('radio', { name: 'Internal note' }).click();
-  await page
-    .getByRole('textbox', { name: /Note for your team/ })
-    .fill('Checked the toner, it is fine.');
+  // The composer suggests teammates after "@", so it is a combobox rather than a plain text box.
+  const composer = page.getByRole('combobox', { name: /Note for your team/ });
+  await composer.fill('Checked the toner, it is fine. ');
+  await composer.pressSequentially('@tom');
+  await page.getByRole('option', { name: 'Tom Okafor' }).click();
+  await composer.pressSequentially('can you order a new drum?');
   await page.getByRole('button', { name: 'Add note' }).click();
-  await expect(page.getByText('Checked the toner, it is fine.')).toBeVisible();
+  const note = page.locator('.message.internal').last();
+  await expect(note).toContainText(
+    'Checked the toner, it is fine. @Tom Okafor can you order a new drum?',
+  );
+  await expect(note.locator('.mention')).toHaveText('@Tom Okafor');
 
   await openMenu(page, 'Tickets');
   await page
