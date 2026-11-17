@@ -5,7 +5,8 @@ three audiences: support teams in their workspace (`/app`), their customers in a
 (`/portal/<workspace>`), and the people who run NexDesk in the platform console (`/admin`).
 
 The API, the architecture diagrams and the data model live in
-[nexdesk-api](https://github.com/mahmoudadel810/nexdesk-api).
+[nexdesk-api](https://github.com/mahmoudadel810/nexdesk-api); the mobile app for support teams is
+[nexdesk-mobile](https://github.com/mahmoudadel810/nexdesk-mobile).
 
 ![Agent dashboard](docs/screenshots/dashboard.png)
 
