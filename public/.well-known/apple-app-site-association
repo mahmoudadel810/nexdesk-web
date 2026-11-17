@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [],
+        "components": [
+          { "/": "/app/tickets/*", "comment": "A ticket" },
+          { "/": "/app/notifications", "comment": "The notification centre" }
+        ]
+      }
+    ]
+  }
+}

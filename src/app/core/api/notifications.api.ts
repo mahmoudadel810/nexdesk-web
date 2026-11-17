@@ -39,6 +39,8 @@ export interface NotificationPreference {
   readonly type: NotificationType;
   readonly inApp: boolean;
   readonly email: boolean;
+  /** Pushes to the person's phones with the NexDesk app. */
+  readonly push: boolean;
 }
 
 const API = `${environment.apiUrl}/notifications`;
