@@ -4,6 +4,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Attachment, TicketsApi, TimelineItem } from '../../core/api/tickets.api';
 import { FileSizePipe } from '../../shared/file-size.pipe';
 import { LocalDatePipe } from '../../shared/local-date.pipe';
+import { MentionPart, splitMentions } from '../../shared/mentions';
 
 const TRANSLATED_VALUES: Partial<Record<string, string>> = {
   SlaBreached: 'sla.metricNames',
@@ -38,7 +39,11 @@ const TRANSLATED_VALUES: Partial<Record<string, string>> = {
                 {{ item.createdAt | localDate: 'relative' }}
               </time>
             </header>
-            <p class="body" dir="auto">{{ item.body }}</p>
+            <p class="body" dir="auto">
+              @for (part of parts(item.body); track $index) {
+                <span [class.mention]="part.mention">{{ part.text }}</span>
+              }
+            </p>
             @if (item.attachments.length > 0) {
               <ul class="attachments" [attr.aria-label]="'tickets.attachments.title' | transloco">
                 @for (attachment of item.attachments; track attachment.id) {
@@ -126,6 +131,19 @@ const TRANSLATED_VALUES: Partial<Record<string, string>> = {
       text-align: start;
     }
 
+    .mention {
+      padding-inline: 2px;
+      border-radius: 4px;
+      background: color-mix(in srgb, var(--mat-sys-primary) 14%, transparent);
+      color: var(--mat-sys-primary);
+      font-weight: 500;
+    }
+
+    .internal .mention {
+      color: inherit;
+      background: color-mix(in srgb, currentColor 14%, transparent);
+    }
+
     .attachments {
       list-style: none;
       margin: 12px 0 0;
@@ -179,6 +197,12 @@ export class TicketTimeline {
   private readonly transloco = inject(TranslocoService);
 
   readonly items = input.required<readonly TimelineItem[]>();
+  /** Names of the team members whose "@Full Name" is highlighted. */
+  readonly mentionable = input<readonly string[]>([]);
+
+  protected parts(body: string | null): MentionPart[] {
+    return body ? splitMentions(body, this.mentionable()) : [];
+  }
 
   protected actorName(item: TimelineItem): string {
     return (

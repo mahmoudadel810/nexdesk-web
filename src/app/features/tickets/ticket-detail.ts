@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,6 +43,7 @@ import { toProblem } from '../../core/http/problem';
 import { Notifier } from '../../core/ui/notifier';
 import { Confirm } from '../../shared/confirm-dialog';
 import { LocalDatePipe } from '../../shared/local-date.pipe';
+import { insertMention, mentionCandidates, mentionQuery } from '../../shared/mentions';
 import { Prompt } from '../../shared/prompt-dialog';
 import { SlaStatus } from '../../shared/sla-status';
 import { AttachmentPicker } from './attachment-picker';
@@ -60,6 +62,7 @@ type ReplyMode = 'reply' | 'note';
     CustomFieldInputs,
     FormsModule,
     LocalDatePipe,
+    MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatFormFieldModule,
@@ -150,7 +153,7 @@ type ReplyMode = 'reply' | 'note';
 
       <div class="layout">
         <section class="conversation" [attr.aria-label]="'tickets.timeline.label' | transloco">
-          <app-ticket-timeline [items]="timeline()" />
+          <app-ticket-timeline [items]="timeline()" [mentionable]="peopleNames()" />
 
           @if (ticket.mergedInto; as target) {
             <p class="form-notice">
@@ -190,13 +193,30 @@ type ReplyMode = 'reply' | 'note';
                   }}
                 </mat-label>
                 <textarea
+                  #composer
                   matInput
                   rows="5"
                   name="body"
                   maxlength="20000"
                   [ngModel]="body()"
                   (ngModelChange)="body.set($event)"
+                  [matAutocomplete]="mentionMenu"
+                  (input)="trackCaret(composer)"
+                  (click)="trackCaret(composer)"
+                  (keyup)="trackCaret(composer)"
                 ></textarea>
+                <mat-autocomplete
+                  #mentionMenu="matAutocomplete"
+                  autoActiveFirstOption
+                  (optionSelected)="placeCaret(composer)"
+                >
+                  @for (option of mentionOptions(); track option.id) {
+                    <mat-option [value]="option.text">
+                      <mat-icon aria-hidden="true">alternate_email</mat-icon>{{ option.name }}
+                    </mat-option>
+                  }
+                </mat-autocomplete>
+                <mat-hint>{{ 'tickets.composer.mentionHint' | transloco }}</mat-hint>
               </mat-form-field>
               @if (composerError(); as message) {
                 <p class="form-alert" role="alert">{{ message }}</p>
@@ -505,7 +525,10 @@ export class TicketDetail {
   protected readonly ticket = signal<Ticket | null>(null);
   protected readonly timeline = signal<readonly TimelineItem[]>([]);
   protected readonly missing = signal(false);
-  private readonly agents = signal<readonly User[]>([]);
+  /** Every active team member: anyone can be mentioned, only non-viewers can be assigned. */
+  private readonly people = signal<readonly User[]>([]);
+  private readonly agents = computed(() => this.people().filter((user) => user.role !== 'Viewer'));
+  protected readonly peopleNames = computed(() => this.people().map((user) => user.fullName));
   protected readonly teams = signal<readonly Team[]>([]);
   protected readonly customFields = signal<readonly CustomField[]>([]);
 
@@ -515,6 +538,27 @@ export class TicketDetail {
   protected readonly submitAs = signal<TicketStatus | null>(null);
   protected readonly sending = signal(false);
   protected readonly composerError = signal<string | null>(null);
+  protected readonly caret = signal<number>(0);
+  private beforePick = { text: '', caret: 0 };
+
+  /** While "@name" is being typed: the teammates it could mean, each with the text it would leave behind. */
+  protected readonly mentionOptions = computed(() => {
+    const text = this.body();
+    const caret = Math.min(this.caret(), text.length);
+    const query = mentionQuery(text, caret);
+    if (!query) {
+      return [];
+    }
+
+    const self = this.auth.session()?.user.id;
+    return mentionCandidates(
+      this.people().filter((user) => user.id !== self),
+      query.query,
+    ).map((user) => {
+      const result = insertMention(text, query, caret, user.fullName);
+      return { id: user.id, name: user.fullName, text: result.text };
+    });
+  });
 
   protected readonly closed = computed(() => this.ticket()?.status === 'Closed');
   protected readonly canEdit = computed(() => this.auth.can('tickets.edit'));
@@ -551,7 +595,7 @@ export class TicketDetail {
 
     inject(UsersApi)
       .list({ isActive: true, page: 1, pageSize: 100 })
-      .subscribe((users) => this.agents.set(users.items.filter((user) => user.role !== 'Viewer')));
+      .subscribe((users) => this.people.set(users.items));
     inject(TeamsApi)
       .list()
       .subscribe((teams) => this.teams.set(teams));
@@ -618,6 +662,24 @@ export class TicketDetail {
         this.notifier.success('tickets.detail.deleted', { number: ticket.number });
         void this.router.navigate(['/app/tickets']);
       });
+  }
+
+  protected trackCaret(composer: HTMLTextAreaElement): void {
+    this.caret.set(composer.selectionStart);
+    this.beforePick = { text: composer.value, caret: composer.selectionStart };
+  }
+
+  /**
+   * The autocomplete writes the whole new text and leaves the caret at its end; put it back right after the name.
+   * Everything after the old caret is unchanged, so its length says where the name ends.
+   */
+  protected placeCaret(composer: HTMLTextAreaElement): void {
+    const rest = this.beforePick.text.slice(this.beforePick.caret).replace(/^ /, '');
+    const caret = composer.value.length - rest.length;
+    queueMicrotask(() => {
+      composer.setSelectionRange(caret, caret);
+      this.trackCaret(composer);
+    });
   }
 
   protected send(ticket: Ticket): void {

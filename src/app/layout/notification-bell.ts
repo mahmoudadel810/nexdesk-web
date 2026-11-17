@@ -201,6 +201,8 @@ export class NotificationBell {
         return 'error';
       case 'Automation':
         return 'bolt';
+      case 'Mention':
+        return 'alternate_email';
       default:
         return 'chat';
     }
