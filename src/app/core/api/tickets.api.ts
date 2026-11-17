@@ -140,7 +140,14 @@ export interface Attachment {
   readonly sizeBytes: number;
 }
 
-export type ActorType = 'Staff' | 'Customer' | 'System';
+export type ActorType = 'Staff' | 'Customer' | 'System' | 'ApiKey';
+
+/** Who did something: a team member, a customer, an integration's API key or NexDesk itself. */
+export interface Actor {
+  readonly type: ActorType;
+  readonly id: string | null;
+  readonly name: string | null;
+}
 
 export type TicketEventType =
   | 'Created'
@@ -161,11 +168,7 @@ export interface TimelineItem {
   readonly id: string;
   readonly kind: 'Message' | 'Event';
   readonly createdAt: string;
-  readonly actor: {
-    readonly type: ActorType;
-    readonly id: string | null;
-    readonly name: string | null;
-  };
+  readonly actor: Actor;
   readonly body: string | null;
   readonly isInternal: boolean;
   readonly attachments: readonly Attachment[];
