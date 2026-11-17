@@ -60,6 +60,18 @@ const NAV_ITEMS: readonly NavItem[] = [
     permission: 'custom-fields.manage',
   },
   {
+    path: '/app/settings/developers',
+    icon: 'code',
+    label: 'nav.developers',
+    permission: 'developer.manage',
+  },
+  {
+    path: '/app/settings/audit',
+    icon: 'history',
+    label: 'nav.auditLog',
+    permission: 'audit.view',
+  },
+  {
     path: '/app/settings/billing',
     icon: 'credit_card',
     label: 'nav.billing',

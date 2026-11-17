@@ -41,7 +41,8 @@ body {
   }
 }
 
-.form-stack {
+.form-stack,
+.mat-mdc-dialog-content.form-stack {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -101,6 +102,11 @@ body {
 .dialog-lead {
   margin: 0 0 8px;
   color: var(--mat-sys-on-surface-variant);
+}
+
+/* Dialogs that show logs or code need more room than Material's 560px default. */
+.wide-dialog {
+  --mat-dialog-container-max-width: calc(100vw - 32px);
 }
 
 .page-header {

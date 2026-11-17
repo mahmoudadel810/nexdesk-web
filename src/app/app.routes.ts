@@ -179,6 +179,18 @@ export const routes: Routes = [
         title: 'NexDesk',
       },
       {
+        path: 'settings/audit',
+        canActivate: [permissionGuard('audit.view')],
+        loadComponent: () => import('./features/settings/audit-log').then((m) => m.AuditLog),
+        title: 'NexDesk',
+      },
+      {
+        path: 'settings/developers',
+        canActivate: [permissionGuard('developer.manage')],
+        loadComponent: () => import('./features/settings/developers').then((m) => m.Developers),
+        title: 'NexDesk',
+      },
+      {
         path: 'profile',
         loadComponent: () => import('./features/profile/profile').then((m) => m.Profile),
         title: 'NexDesk',

@@ -40,7 +40,8 @@ docker build -t nexdesk-web .
 docker run --rm -p 4200:80 --network nexdesk_default nexdesk-web
 ```
 
-The container's nginx serves the app and forwards `/api` and `/hubs` to `API_UPSTREAM`
+The container's nginx serves the app and forwards `/api`, `/hubs` and the API reference (`/docs`,
+`/openapi`) to `API_UPSTREAM`
 (default `http://api:8080`, the API service name on the compose network).
 
 ## Scripts

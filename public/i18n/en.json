@@ -35,7 +35,9 @@
     "knowledgeBase": "Knowledge base",
     "automation": "Automation",
     "billing": "Plan and billing",
-    "reports": "Reports"
+    "reports": "Reports",
+    "developers": "Developers",
+    "auditLog": "Audit log"
   },
   "roles": {
     "Owner": "Owner",
@@ -121,6 +123,9 @@
     "plan-limit-storage": "Your plan's attachment storage is full. Upgrade the plan to upload more files.",
     "plan-limit-automation": "Your plan's automation rule limit is reached. Upgrade the plan to add more rules.",
     "plan-feature-api": "API keys and webhooks are not part of your plan. Upgrade the plan to use them.",
+    "api-key-not-found": "This API key no longer exists.",
+    "webhook-not-found": "This webhook no longer exists.",
+    "webhook-delivery-not-found": "This delivery no longer exists.",
     "plan-not-found": "This plan does not exist.",
     "invoice-not-found": "This invoice no longer exists.",
     "already-on-plan": "The workspace is already on this plan.",
@@ -551,7 +556,8 @@
       "actors": {
         "Staff": "An agent",
         "Customer": "The customer",
-        "System": "NexDesk"
+        "System": "NexDesk",
+        "ApiKey": "An integration"
       },
       "events": {
         "Created": "{{actor}} created the ticket",
@@ -980,6 +986,169 @@
       "cvc": "Security code",
       "pay": "Pay {{price}}",
       "confirm": "Switch plan"
+    }
+  },
+  "audit": {
+    "title": "Audit log",
+    "subtitle": "Who created, changed or deleted what in this workspace, and from where.",
+    "filters": {
+      "search": "Search by name or id",
+      "type": "Record",
+      "operation": "Action",
+      "all": "All",
+      "from": "From",
+      "to": "To",
+      "clear": "Clear filters"
+    },
+    "emptyTitle": "Nothing recorded yet",
+    "emptyBody": "Changes to tickets, people, settings and integrations will appear here.",
+    "noMatches": "No entries match",
+    "noMatchesBody": "Try a wider period or fewer filters.",
+    "summary": {
+      "Created": "{{actor}} created {{type}} {{label}}",
+      "Updated": "{{actor}} changed {{type}} {{label}}",
+      "Deleted": "{{actor}} deleted {{type}} {{label}}"
+    },
+    "operations": {
+      "Created": "Created",
+      "Updated": "Changed",
+      "Deleted": "Deleted"
+    },
+    "apiKeyActor": "{{name}} (API key)",
+    "when": "When",
+    "who": "By",
+    "address": "IP address",
+    "noAddress": "Not recorded",
+    "recordId": "Record id",
+    "changes": "Changed fields",
+    "field": "Field",
+    "before": "Before",
+    "after": "After",
+    "noFields": "No field values were recorded for this action.",
+    "types": {
+      "ticket": "ticket",
+      "user": "team member",
+      "invitation": "invitation",
+      "team": "team",
+      "team-member": "team membership",
+      "customer": "customer",
+      "workspace": "workspace",
+      "business-hours": "business hours",
+      "holiday": "holiday",
+      "sla-policy": "SLA policy",
+      "custom-field": "custom field",
+      "kb-category": "knowledge base category",
+      "kb-article": "knowledge base article",
+      "automation-rule": "automation rule",
+      "subscription": "subscription",
+      "invoice": "invoice",
+      "api-key": "API key",
+      "webhook": "webhook"
+    }
+  },
+  "developers": {
+    "title": "Developers",
+    "subtitle": "Connect other systems to this workspace with API keys and webhooks.",
+    "docs": "API reference",
+    "upgradeTitle": "API access is part of the Business plan",
+    "upgradeBody": "Upgrade to issue API keys for the public API and to send ticket events to your own systems with webhooks.",
+    "secret": {
+      "onlyOnce": "Copy it now and store it somewhere safe. For your security it will not be shown again.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "done": "I have saved it"
+    },
+    "scopes": {
+      "tickets:read": "List and read tickets",
+      "tickets:write": "Create tickets, change them and reply"
+    },
+    "events": {
+      "ticket": {
+        "created": "A ticket was opened",
+        "updated": "A ticket's status, priority, subject, tags or fields changed",
+        "assigned": "A ticket was assigned to someone",
+        "replied": "Someone replied to the customer (internal notes are never sent)",
+        "solved": "A ticket was solved"
+      }
+    },
+    "keys": {
+      "title": "API keys",
+      "subtitle": "Integrations send a key in the header",
+      "new": "New API key",
+      "empty": "No API keys yet.",
+      "newTitle": "New API key",
+      "newLead": "The key acts on behalf of the workspace. Give it only the access the integration needs.",
+      "name": "Name",
+      "nameHint": "What uses the key, such as \"Order system\"",
+      "scopes": "Access",
+      "scopeRequired": "Choose at least one kind of access.",
+      "expiry": "Expires",
+      "never": "Never",
+      "days": "After {{count}} days",
+      "issue": "Create key",
+      "issuedTitle": "Your new API key",
+      "issuedLead": "This is the key for {{name}}.",
+      "created": "Created",
+      "lastUsed": "Last used",
+      "neverUsed": "Never",
+      "expires": "Expires",
+      "active": "Active",
+      "revoked": "Revoked",
+      "expired": "Expired",
+      "revoke": "Revoke",
+      "revokeTitle": "Revoke \"{{name}}\"?",
+      "revokeBody": "Anything using this key stops working at once. This cannot be undone.",
+      "revokedDone": "API key revoked."
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "subtitle": "NexDesk posts signed JSON to these addresses when tickets change, and retries for about nine hours if they do not answer.",
+      "add": "Add endpoint",
+      "empty": "No endpoints yet.",
+      "newTitle": "Add a webhook endpoint",
+      "editTitle": "Edit webhook endpoint",
+      "url": "Endpoint URL",
+      "urlInvalid": "Enter a full http or https address, without a user name or password.",
+      "description": "Description (optional)",
+      "events": "Events to send",
+      "eventRequired": "Choose at least one event.",
+      "enabled": "Send events to this endpoint",
+      "enabledLabel": "Send events to {{url}}",
+      "createdTitle": "Endpoint added",
+      "createdLead": "Every request carries an X-NexDesk-Signature header made with this signing secret. Use it to check that requests really come from NexDesk.",
+      "deliveries": "Deliveries",
+      "ping": "Send test event",
+      "pinged": "Test event sent.",
+      "rotate": "Rotate secret",
+      "rotateTitle": "Rotate the signing secret?",
+      "rotateBody": "Requests are signed with the new secret from now on. Update your receiver right away, or it will reject them.",
+      "rotatedTitle": "New signing secret",
+      "rotatedLead": "Requests are now signed with this secret.",
+      "deleteTitle": "Delete this endpoint?",
+      "deleteBody": "{{url}} will stop receiving events, and its delivery log will be deleted.",
+      "deleted": "Endpoint deleted."
+    },
+    "deliveries": {
+      "title": "Deliveries",
+      "empty": "Nothing has been sent to this endpoint yet.",
+      "status": {
+        "Succeeded": "Delivered",
+        "Queued": "Queued",
+        "Pending": "Waiting to retry",
+        "Failed": "Failed"
+      },
+      "attempts": "Attempts",
+      "lastAttempt": "Last attempt",
+      "took": "{{ms}} ms",
+      "nextAttempt": "Next attempt",
+      "resent": "Resent",
+      "resentBody": "A copy of an earlier delivery",
+      "response": "Response",
+      "payload": "Payload",
+      "resend": "Resend",
+      "resendQueued": "Delivery sent again.",
+      "more": "Show older deliveries",
+      "refresh": "Refresh"
     }
   },
   "reports": {
