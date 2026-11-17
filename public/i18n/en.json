@@ -31,7 +31,8 @@
     "pricing": "Pricing",
     "tickets": "Tickets",
     "customFields": "Custom fields",
-    "sla": "SLA"
+    "sla": "SLA",
+    "knowledgeBase": "Knowledge base"
   },
   "roles": {
     "Owner": "Owner",
@@ -102,7 +103,12 @@
     "holiday-exists": "A holiday is already defined for this date.",
     "notification-not-found": "This notification no longer exists.",
     "workspace-not-found": "This help centre does not exist.",
-    "ticket-not-solved": "A request can be rated once it has been solved."
+    "ticket-not-solved": "A request can be rated once it has been solved.",
+    "kb-category-not-found": "This category no longer exists.",
+    "kb-article-not-found": "This article no longer exists.",
+    "kb-category-name-taken": "A category with this name already exists.",
+    "kb-category-not-empty": "Move or delete the articles in this category first.",
+    "kb-unknown-category": "Choose an existing category."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -679,6 +685,80 @@
       "SlaBreach": "Ticket #{{number}} missed its {{metric}} deadline"
     }
   },
+  "kb": {
+    "title": "Knowledge base",
+    "subtitle": "Articles customers can read in your help centre before they ask.",
+    "openHelpCentre": "Open help centre",
+    "newArticle": "New article",
+    "search": "Search articles",
+    "allCategories": "All categories",
+    "allStatuses": "Any status",
+    "noArticles": "No articles match.",
+    "emptyTitle": "No articles yet",
+    "emptyBody": "Articles your team publishes will show up here.",
+    "emptyBodyManager": "Add a category first, then write your first article.",
+    "back": "Back to knowledge base",
+    "notFoundTitle": "Article not found",
+    "notFoundBody": "It may have been deleted.",
+    "status": {
+      "Draft": "Draft",
+      "Published": "Published"
+    },
+    "fields": {
+      "title": "Title",
+      "category": "Category",
+      "status": "Status",
+      "views": "Views",
+      "helpful": "Helpful",
+      "updated": "Updated",
+      "body": "Article text"
+    },
+    "categories": {
+      "manage": "Categories",
+      "title": "Categories",
+      "lead": "Categories group articles in the help centre. A category shows up there once it has a published article.",
+      "articleCount": "{{count}} articles",
+      "empty": "No categories yet.",
+      "edit": "Edit {{name}}",
+      "delete": "Delete {{name}}",
+      "addTitle": "Add a category",
+      "editTitle": "Edit category",
+      "name": "Name",
+      "description": "Description (optional)",
+      "position": "Position",
+      "positionHint": "Lower numbers come first.",
+      "add": "Add category",
+      "addFirst": "Add a category",
+      "done": "Done",
+      "saved": "{{name}} saved.",
+      "deleted": "{{name}} deleted."
+    },
+    "editor": {
+      "newTitle": "New article",
+      "newSubtitle": "Write in Markdown. The article stays a draft until you publish it.",
+      "editTitle": "Edit article",
+      "updated": "Updated",
+      "stats": "{{views}} views, {{helpful}} found it helpful, {{notHelpful}} did not",
+      "view": "View in help centre",
+      "modeLabel": "Editor mode",
+      "write": "Write",
+      "preview": "Preview",
+      "previewEmpty": "Nothing to preview yet.",
+      "markdownHint": "Markdown: ## heading, **bold**, *italic*, - list, [link](https://…), `code`.",
+      "saveDraft": "Save draft",
+      "publish": "Publish",
+      "saveChanges": "Save changes",
+      "unpublish": "Unpublish",
+      "saved": "Article saved.",
+      "published": "Article published.",
+      "unpublished": "Article is a draft again."
+    },
+    "delete": {
+      "title": "Delete \"{{title}}\"?",
+      "body": "The article disappears from the help centre and cannot be restored.",
+      "done": "Article deleted."
+    }
+  },
   "portal": {
     "home": "{{name}} help centre",
     "poweredBy": "Powered by NexDesk",
@@ -697,7 +777,8 @@
     },
     "welcome": {
       "title": "How can {{name}} help?",
-      "body": "Send us a request and follow the conversation here. We will also keep you posted by email."
+      "body": "Search our help articles, or send us a request and follow the conversation here.",
+      "contactTitle": "Can't find what you need?"
     },
     "login": {
       "subtitle": "Sign in to follow your requests with {{name}}.",
@@ -749,6 +830,22 @@
       "title": "Choose your password",
       "subtitle": "This is the password for your account at the {{name}} help centre.",
       "success": "Password saved. You can sign in now."
+    },
+    "kb": {
+      "search": "Search help articles",
+      "results": "Search results",
+      "resultCount": "{{count}} articles found",
+      "noResults": "Nothing matches. Try other words, or send us a request.",
+      "suggestionsTitle": "These articles might answer your question",
+      "back": "Help centre",
+      "updated": "Updated",
+      "notFoundTitle": "Article not found",
+      "notFoundBody": "It may have been moved or removed.",
+      "feedbackQuestion": "Was this article helpful?",
+      "feedbackThanks": "Thanks for your feedback.",
+      "yes": "Yes",
+      "no": "No",
+      "stillNeedHelp": "Still need help?"
     }
   }
 }

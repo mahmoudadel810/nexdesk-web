@@ -42,6 +42,7 @@ const NAV_ITEMS: readonly NavItem[] = [
     label: 'nav.tickets',
     permission: 'tickets.view',
   },
+  { path: '/app/kb', icon: 'menu_book', label: 'nav.knowledgeBase', permission: 'kb.view' },
   { path: '/app/users', icon: 'group', label: 'nav.users', permission: 'users.view' },
   { path: '/app/teams', icon: 'diversity_3', label: 'nav.teams', permission: 'users.view' },
   { path: '/app/settings/sla', icon: 'timer', label: 'nav.sla', permission: 'sla.manage' },

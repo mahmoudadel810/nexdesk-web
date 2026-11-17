@@ -10,6 +10,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   NonNullableFormBuilder,
@@ -31,6 +32,7 @@ import { Notifier } from '../core/ui/notifier';
 import { AttachmentPicker } from '../features/tickets/attachment-picker';
 import { FileSizePipe } from '../shared/file-size.pipe';
 import { LocalDatePipe } from '../shared/local-date.pipe';
+import { PortalHelpBrowser, PortalHelpSuggestions } from './portal-kb';
 import { PortalCard } from './portal-shell';
 import {
   Csat,
@@ -108,11 +110,15 @@ export class RatingInput {
 @Component({
   selector: 'app-portal-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButtonModule, MatIconModule, RouterLink, TranslocoPipe],
+  imports: [MatButtonModule, MatIconModule, PortalHelpBrowser, RouterLink, TranslocoPipe],
   template: `
     <section class="hero">
       <h1>{{ 'portal.welcome.title' | transloco: { name: portal.info()?.name } }}</h1>
       <p>{{ 'portal.welcome.body' | transloco }}</p>
+    </section>
+    <app-portal-help-browser />
+    <section class="contact">
+      <h2>{{ 'portal.welcome.contactTitle' | transloco }}</h2>
       <p class="actions">
         <a mat-flat-button [routerLink]="[base(), 'tickets', 'new']">
           <mat-icon aria-hidden="true">add</mat-icon>
@@ -127,7 +133,19 @@ export class RatingInput {
   styles: `
     .hero {
       text-align: center;
-      padding-block: 32px;
+      padding-block: 32px 24px;
+    }
+
+    .contact {
+      text-align: center;
+      margin-block-start: 48px;
+      padding-block-start: 32px;
+      border-block-start: 1px solid var(--mat-sys-outline-variant);
+    }
+
+    h2 {
+      font: var(--mat-sys-title-large);
+      margin: 0;
     }
 
     h1 {
@@ -271,6 +289,7 @@ export class PortalTickets {
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    PortalHelpSuggestions,
     ReactiveFormsModule,
     RouterLink,
     TranslocoPipe,
@@ -291,6 +310,7 @@ export class PortalTickets {
         <input matInput formControlName="subject" />
         <mat-error>{{ form.controls.subject | fieldError }}</mat-error>
       </mat-form-field>
+      <app-portal-help-suggestions [term]="subject()" />
       <mat-form-field appearance="outline">
         <mat-label>{{ 'portal.requests.description' | transloco }}</mat-label>
         <textarea matInput rows="8" formControlName="description"></textarea>
@@ -320,6 +340,9 @@ export class PortalTicketNew {
   protected readonly form = inject(NonNullableFormBuilder).group({
     subject: ['', [Validators.required, Validators.maxLength(200)]],
     description: ['', [Validators.required, Validators.maxLength(20000)]],
+  });
+  protected readonly subject = toSignal(this.form.controls.subject.valueChanges, {
+    initialValue: '',
   });
 
   protected submit(): void {

@@ -34,6 +34,10 @@ export const portalRoutes: Routes = [
         loadComponent: () => import('./portal-requests').then((m) => m.PortalCsat),
       },
       {
+        path: 'kb/:articleSlug',
+        loadComponent: () => import('./portal-kb').then((m) => m.PortalArticle),
+      },
+      {
         path: 'tickets',
         canActivate: [portalAuthGuard],
         children: [

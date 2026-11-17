@@ -66,6 +66,30 @@ export interface CsatSurvey {
   readonly csat: Csat | null;
 }
 
+export interface HelpCategory {
+  readonly id: string;
+  readonly name: string;
+  readonly description: string | null;
+  readonly articleCount: number;
+}
+
+export interface HelpArticleSummary {
+  readonly title: string;
+  readonly slug: string;
+  readonly categoryName: string;
+  readonly excerpt: string;
+}
+
+export interface HelpArticle {
+  readonly id: string;
+  readonly title: string;
+  readonly slug: string;
+  readonly categoryName: string;
+  readonly bodyHtml: string;
+  readonly publishedAt: string | null;
+  readonly updatedAt: string | null;
+}
+
 interface PortalState {
   readonly slug: string;
   readonly accessToken: string;
@@ -258,6 +282,38 @@ export class PortalService {
     comment: string | null,
   ): Observable<CsatSurvey> {
     return this.http.post<CsatSurvey>(this.url(slug, '/csat'), { token, rating, comment }, open());
+  }
+
+  helpCategories(slug: string): Observable<HelpCategory[]> {
+    return this.http.get<HelpCategory[]>(this.url(slug, '/kb/categories'), inline());
+  }
+
+  /** Published articles, optionally narrowed to those matching what the reader typed. */
+  helpArticles(slug: string, search = '', limit = 100): Observable<HelpArticleSummary[]> {
+    let params = new HttpParams().set('limit', limit);
+    if (search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    return this.http.get<HelpArticleSummary[]>(this.url(slug, '/kb/articles'), {
+      params,
+      ...inline(),
+    });
+  }
+
+  helpArticle(slug: string, articleSlug: string): Observable<HelpArticle> {
+    return this.http.get<HelpArticle>(
+      this.url(slug, `/kb/articles/${encodeURIComponent(articleSlug)}`),
+      inline(),
+    );
+  }
+
+  rateHelpArticle(slug: string, articleSlug: string, helpful: boolean): Observable<void> {
+    return this.http.post<void>(
+      this.url(slug, `/kb/articles/${encodeURIComponent(articleSlug)}/feedback`),
+      { helpful },
+      inline(),
+    );
   }
 
   private rotate(slug: string): Promise<PortalAuthResponse> {
