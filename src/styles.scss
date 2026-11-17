@@ -41,8 +41,10 @@ body {
   }
 }
 
+/* Repeated with Material's container classes, whose own display rule would otherwise win. */
 .form-stack,
-.mat-mdc-dialog-content.form-stack {
+.mat-mdc-dialog-content.form-stack,
+.mat-mdc-card-content.form-stack {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -102,6 +104,38 @@ body {
 .dialog-lead {
   margin: 0 0 8px;
   color: var(--mat-sys-on-surface-variant);
+}
+
+/* Set for two frames after a language switch; see LanguageService.remeasureFormFields. */
+.nd-remeasure-fields .mat-mdc-form-field-icon-prefix,
+.nd-remeasure-fields .mat-mdc-form-field-text-prefix {
+  padding-inline-end: 0.5px;
+}
+
+/* Hidden until a keyboard user tabs to it; then it lets them jump past the menus. */
+.skip-link {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-start: 8px;
+  z-index: 1000;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  font: var(--mat-sys-label-large);
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.15s;
+}
+
+.skip-link:focus {
+  transform: none;
+  outline: 2px solid var(--mat-sys-on-surface);
+  outline-offset: 2px;
+}
+
+main[tabindex='-1']:focus {
+  outline: none;
 }
 
 /* Dialogs that show logs or code need more room than Material's 560px default. */

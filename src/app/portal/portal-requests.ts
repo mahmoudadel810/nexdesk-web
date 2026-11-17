@@ -114,7 +114,11 @@ export class RatingInput {
   template: `
     <section class="hero">
       <h1>{{ 'portal.welcome.title' | transloco: { name: portal.info()?.name } }}</h1>
-      <p>{{ 'portal.welcome.body' | transloco }}</p>
+      @if (portal.info()?.welcomeText; as welcome) {
+        <p class="welcome" dir="auto">{{ welcome }}</p>
+      } @else {
+        <p>{{ 'portal.welcome.body' | transloco }}</p>
+      }
     </section>
     <app-portal-help-browser />
     <section class="contact">
@@ -134,6 +138,12 @@ export class RatingInput {
     .hero {
       text-align: center;
       padding-block: 32px 24px;
+    }
+
+    .welcome {
+      white-space: pre-line;
+      max-inline-size: 60ch;
+      margin-inline: auto;
     }
 
     .contact {

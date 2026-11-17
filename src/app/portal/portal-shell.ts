@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DOCUMENT,
+  DestroyRef,
+  computed,
+  effect,
+  inject,
+  input,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +16,7 @@ import { CanActivateFn, Router, RouterLink, RouterLinkActive, RouterOutlet } fro
 import { TranslocoPipe } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { PreferencesControls } from '../layout/preferences-controls';
+import { brandTokens } from '../shared/brand';
 import { PortalService } from './portal.service';
 
 /** Loads the workspace behind the help centre and restores the customer's session before any page shows. */
@@ -46,13 +56,20 @@ export const portalAuthGuard: CanActivateFn = (route) => {
   ],
   template: `
     @if (portal.info(); as info) {
+      <a class="skip-link" href="#main" (click)="skipToMain($event)">{{
+        'common.skipToContent' | transloco
+      }}</a>
       <mat-toolbar class="header">
         <a
           class="brand"
           [routerLink]="base()"
           [attr.aria-label]="'portal.home' | transloco: { name: info.name }"
         >
-          <mat-icon aria-hidden="true">support_agent</mat-icon>
+          @if (info.logoUrl) {
+            <img class="logo" [src]="info.logoUrl" alt="" />
+          } @else {
+            <mat-icon aria-hidden="true">support_agent</mat-icon>
+          }
           <span>{{ info.name }}</span>
         </a>
         <span class="spacer"></span>
@@ -75,7 +92,7 @@ export const portalAuthGuard: CanActivateFn = (route) => {
           <a mat-flat-button [routerLink]="[base(), 'login']">{{ 'nav.signIn' | transloco }}</a>
         }
       </mat-toolbar>
-      <main class="content">
+      <main id="main" class="content" tabindex="-1">
         <router-outlet />
       </main>
       <footer>{{ 'portal.poweredBy' | transloco }}</footer>
@@ -110,6 +127,13 @@ export const portalAuthGuard: CanActivateFn = (route) => {
       font: var(--mat-sys-title-large);
       font-weight: 600;
       text-decoration: none;
+    }
+
+    .logo {
+      block-size: 36px;
+      inline-size: auto;
+      max-inline-size: 160px;
+      object-fit: contain;
     }
 
     .brand span {
@@ -161,6 +185,25 @@ export class PortalShell {
 
   readonly tenantSlug = input.required<string>();
   protected readonly base = computed(() => `/portal/${this.tenantSlug()}`);
+
+  constructor() {
+    // On the root, so menus and dialogs, which render outside this component, take the colour too.
+    const root = inject(DOCUMENT).documentElement;
+    let applied: string[] = [];
+    const clear = () => applied.forEach((name) => root.style.removeProperty(name));
+    effect(() => {
+      clear();
+      const tokens = brandTokens(this.portal.info()?.brandColor);
+      applied = Object.keys(tokens);
+      applied.forEach((name) => root.style.setProperty(name, tokens[name]));
+    });
+    inject(DestroyRef).onDestroy(clear);
+  }
+
+  protected skipToMain(event: Event): void {
+    event.preventDefault();
+    document.getElementById('main')?.focus();
+  }
 
   protected signOut(): void {
     const leave = () => void this.router.navigate([this.base()]);
