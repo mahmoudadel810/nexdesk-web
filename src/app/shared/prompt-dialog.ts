@@ -18,6 +18,8 @@ export interface PromptOptions {
   readonly label: string;
   readonly value: string;
   readonly maxLength: number;
+  /** The submit button's text, when "Save" does not describe what happens. */
+  readonly confirmLabel?: string;
 }
 
 @Component({
@@ -34,7 +36,7 @@ export interface PromptOptions {
   ],
   template: `
     <h2 mat-dialog-title>{{ options.title }}</h2>
-    <form (ngSubmit)="submit()" novalidate>
+    <form (submit)="$event.preventDefault(); submit()" novalidate>
       <mat-dialog-content>
         <mat-form-field appearance="outline" class="field">
           <mat-label>{{ options.label }}</mat-label>
@@ -44,7 +46,9 @@ export interface PromptOptions {
       </mat-dialog-content>
       <mat-dialog-actions align="end">
         <button mat-button type="button" mat-dialog-close>{{ 'common.cancel' | transloco }}</button>
-        <button mat-flat-button type="submit">{{ 'common.save' | transloco }}</button>
+        <button mat-flat-button type="submit">
+          {{ options.confirmLabel ?? ('common.save' | transloco) }}
+        </button>
       </mat-dialog-actions>
     </form>
   `,
