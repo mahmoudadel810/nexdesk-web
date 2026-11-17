@@ -126,4 +126,26 @@ describe('PortalService', () => {
     expect(portal.tokenFor('/api/v1/portal/acme/tickets')).toBe('restored');
     expect(portal.tokenFor('/api/v1/portal/acme-two/tickets')).toBeNull();
   });
+
+  it('hides plan advice meant for staff from customers', () => {
+    signInCustomer();
+    let code: unknown;
+    portal.createTicket('acme', 'Help', 'Please', []).subscribe({
+      error: (error: { error: { code: string } }) => (code = error.error.code),
+    });
+    backend
+      .expectOne('/api/v1/portal/acme/tickets')
+      .flush({ code: 'plan-limit-tickets' }, { status: 402, statusText: 'Payment Required' });
+
+    expect(code).toBe('portal-unavailable');
+
+    portal.upload('acme', new File(['x'], 'x.txt')).subscribe({
+      error: (error: { error: { code: string } }) => (code = error.error.code),
+    });
+    backend
+      .expectOne('/api/v1/portal/acme/attachments')
+      .flush({ code: 'file-too-large' }, { status: 400, statusText: 'Bad Request' });
+
+    expect(code).toBe('file-too-large');
+  });
 });

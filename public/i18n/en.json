@@ -33,7 +33,8 @@
     "customFields": "Custom fields",
     "sla": "SLA",
     "knowledgeBase": "Knowledge base",
-    "automation": "Automation"
+    "automation": "Automation",
+    "billing": "Plan and billing"
   },
   "roles": {
     "Owner": "Owner",
@@ -113,7 +114,21 @@
     "automation-rule-not-found": "This rule no longer exists.",
     "automation-invalid-condition": "One of the conditions is not valid. Check its values and try again.",
     "automation-invalid-action": "One of the actions is not valid. Check its values and try again.",
-    "automation-time-rule-needs-duration": "A scheduled rule needs a condition that measures hours, and all conditions must match."
+    "automation-time-rule-needs-duration": "A scheduled rule needs a condition that measures hours, and all conditions must match.",
+    "plan-limit-agents": "Your plan's team member limit is reached. Upgrade the plan to add more people.",
+    "plan-limit-tickets": "Your plan's monthly ticket limit is reached. Upgrade the plan to keep creating tickets.",
+    "plan-limit-storage": "Your plan's attachment storage is full. Upgrade the plan to upload more files.",
+    "plan-limit-automation": "Your plan's automation rule limit is reached. Upgrade the plan to add more rules.",
+    "plan-feature-api": "API keys and webhooks are not part of your plan. Upgrade the plan to use them.",
+    "plan-not-found": "This plan does not exist.",
+    "invoice-not-found": "This invoice no longer exists.",
+    "already-on-plan": "The workspace is already on this plan.",
+    "invalid-card": "Check the card details and try again.",
+    "card-declined": "The card was declined. Try another card.",
+    "downgrade-agents": "This plan allows fewer team members than you have. Deactivate people or revoke invitations first.",
+    "downgrade-storage": "Your attachments need more storage than this plan includes.",
+    "downgrade-automation": "This plan allows fewer automation rules than you have. Delete some rules first.",
+    "portal-unavailable": "We cannot take this in right now. Please contact us another way."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -888,6 +903,74 @@
       "needsAction": "Add at least one action.",
       "incomplete": "Complete the highlighted parts of the rule.",
       "saved": "{{name}} saved."
+    }
+  },
+  "billing": {
+    "title": "Plan and billing",
+    "subtitle": "Your plan, what you have used of it, and your invoices.",
+    "viewPlans": "View plans",
+    "currentPlan": "Current plan",
+    "perMonth": "per month",
+    "renewsOn": "Renews on",
+    "paidWith": "Paid with {{brand}} ending in {{last4}}",
+    "freeForever": "Free, with no card on file.",
+    "unlimited": "unlimited",
+    "changed": "You are now on the {{plan}} plan.",
+    "usage": {
+      "title": "Usage",
+      "of": "{{used}} of {{limit}}",
+      "agents": "Team members",
+      "tickets": "Tickets this month",
+      "storage": "Attachment storage",
+      "automation": "Automation rules"
+    },
+    "plans": {
+      "title": "Plans",
+      "current": "Your plan",
+      "upgrade": "Upgrade to {{plan}}",
+      "downgrade": "Switch to {{plan}}",
+      "ownerOnly": "Only an owner can change the plan."
+    },
+    "features": {
+      "agents": "Team members: {{count}}",
+      "agentsUnlimited": "Unlimited team members",
+      "tickets": "Tickets per month: {{count}}",
+      "ticketsUnlimited": "Unlimited tickets",
+      "storage": "{{size}} attachment storage",
+      "automation": "Automation rules: {{count}}",
+      "automationUnlimited": "Unlimited automation rules",
+      "api": "API keys and outbound webhooks",
+      "noApi": "No API access",
+      "requests": "API requests per team member, per minute: {{count}}"
+    },
+    "invoices": {
+      "title": "Invoices",
+      "number": "Invoice",
+      "date": "Date",
+      "plan": "Plan",
+      "amount": "Amount",
+      "status": "Status",
+      "paid": "Paid",
+      "empty": "No invoices yet. Paid plans produce one each month.",
+      "download": "Download invoice {{number}}",
+      "reasons": {
+        "PlanChange": "plan change",
+        "Renewal": "renewal"
+      }
+    },
+    "checkout": {
+      "title": "Switch to {{plan}}",
+      "summary": "{{plan}} costs {{price}} per month. You are billed today and then every month until you change plans.",
+      "freeSummary": "You move from {{plan}} to the free plan right away. Nothing is refunded and no further invoices are issued.",
+      "simulated": "This is a simulated payment. No money is charged, and the card number is not stored.",
+      "useTestCard": "Fill in a test card",
+      "cardholder": "Name on card",
+      "cardNumber": "Card number",
+      "expiryMonth": "Expiry month",
+      "expiryYear": "Expiry year",
+      "cvc": "Security code",
+      "pay": "Pay {{price}}",
+      "confirm": "Switch plan"
     }
   },
   "portal": {

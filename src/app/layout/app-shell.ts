@@ -58,6 +58,12 @@ const NAV_ITEMS: readonly NavItem[] = [
     label: 'nav.customFields',
     permission: 'custom-fields.manage',
   },
+  {
+    path: '/app/settings/billing',
+    icon: 'credit_card',
+    label: 'nav.billing',
+    permission: 'settings.manage',
+  },
 ];
 
 @Component({
