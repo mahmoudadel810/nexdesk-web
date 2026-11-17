@@ -113,6 +113,18 @@ Vercel rewrites do not carry WebSockets, so SignalR falls back to server-sent ev
 its own. The [API README](https://github.com/mahmoudadel810/nexdesk-api#hosted-demo-supabase-render-and-vercel)
 covers the database and the API.
 
+### App links for the mobile app
+
+`public/.well-known/assetlinks.json` and `public/.well-known/apple-app-site-association` let ticket links
+(`/app/tickets/{id}`, the ones in notification emails) open in the NexDesk mobile app when it is
+installed. Both Vercel (`vercel.json`) and the nginx image serve them as `application/json`.
+
+- Android: `app.nexdesk.mobile` is signed with the upload key and `app.nexdesk.mobile.dev` with the debug
+  key; their SHA-256 fingerprints are listed. Once the app is on Google Play, add the fingerprint of Play's
+  app-signing key from the Play Console as well.
+- iOS: `appIDs` is empty until there is an Apple developer account; then add
+  `<TeamID>.app.nexdesk.mobile`.
+
 ### API URL per environment
 
 `src/environments/environment.ts` (production) and `environment.development.ts` hold `apiUrl` and

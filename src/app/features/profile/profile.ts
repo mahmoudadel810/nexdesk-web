@@ -150,6 +150,7 @@ import { Notifier } from '../../core/ui/notifier';
                 <th scope="col">{{ 'profile.notifications.event' | transloco }}</th>
                 <th scope="col">{{ 'profile.notifications.inApp' | transloco }}</th>
                 <th scope="col">{{ 'profile.notifications.email' | transloco }}</th>
+                <th scope="col">{{ 'profile.notifications.push' | transloco }}</th>
               </tr>
             </thead>
             <tbody>
@@ -161,7 +162,7 @@ import { Notifier } from '../../core/ui/notifier';
                   <td>
                     <mat-checkbox
                       [checked]="preference.inApp"
-                      [attr.aria-label]="
+                      [aria-label]="
                         ('profile.notifications.types.' + preference.type | transloco) +
                         ' – ' +
                         ('profile.notifications.inApp' | transloco)
@@ -172,12 +173,23 @@ import { Notifier } from '../../core/ui/notifier';
                   <td>
                     <mat-checkbox
                       [checked]="preference.email"
-                      [attr.aria-label]="
+                      [aria-label]="
                         ('profile.notifications.types.' + preference.type | transloco) +
                         ' – ' +
                         ('profile.notifications.email' | transloco)
                       "
                       (change)="setPreference(preference.type, { email: $event.checked })"
+                    />
+                  </td>
+                  <td>
+                    <mat-checkbox
+                      [checked]="preference.push"
+                      [aria-label]="
+                        ('profile.notifications.types.' + preference.type | transloco) +
+                        ' – ' +
+                        ('profile.notifications.push' | transloco)
+                      "
+                      (change)="setPreference(preference.type, { push: $event.checked })"
                     />
                   </td>
                 </tr>
@@ -269,7 +281,7 @@ export class Profile {
 
   protected setPreference(
     type: NotificationType,
-    change: Partial<Pick<NotificationPreference, 'inApp' | 'email'>>,
+    change: Partial<Pick<NotificationPreference, 'inApp' | 'email' | 'push'>>,
   ): void {
     const current = this.preferences().find((preference) => preference.type === type);
     if (current) {

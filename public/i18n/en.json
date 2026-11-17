@@ -433,6 +433,7 @@
       "event": "When",
       "inApp": "In the app",
       "email": "By email",
+      "push": "On my phone",
       "types": {
         "TicketAssigned": "A ticket is assigned to me",
         "TicketReply": "Someone replies on a ticket I follow",

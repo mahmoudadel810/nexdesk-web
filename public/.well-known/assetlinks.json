@@ -1,0 +1,22 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.nexdesk.mobile",
+      "sha256_cert_fingerprints": [
+        "78:B8:A6:07:CA:EB:B3:51:6D:BD:43:75:A8:CA:67:BB:D9:8E:94:36:5B:02:55:6B:C8:60:E9:5C:1C:F3:A9:6E"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.nexdesk.mobile.dev",
+      "sha256_cert_fingerprints": [
+        "04:1D:EA:46:DA:93:CA:E7:BA:FF:F0:62:B7:BF:3A:15:FA:30:89:01:93:B1:C8:04:0D:88:CC:E4:C1:D8:AA:F8"
+      ]
+    }
+  }
+]

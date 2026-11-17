@@ -35,6 +35,18 @@ server {
     add_header Cache-Control "no-cache";
   }
 
+  # App links: ticket URLs open in the mobile app when it is installed. Both files must be served as JSON and
+  # must never fall through to index.html.
+  location = /.well-known/apple-app-site-association {
+    default_type application/json;
+    try_files $uri =404;
+  }
+
+  location = /.well-known/assetlinks.json {
+    default_type application/json;
+    try_files $uri =404;
+  }
+
   location / {
     try_files $uri $uri/ /index.html;
   }

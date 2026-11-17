@@ -237,14 +237,14 @@ const DEFAULT_SORT = '-lastActivityAt';
             <mat-checkbox
               [checked]="allSelected()"
               [indeterminate]="selected().size > 0 && !allSelected()"
-              [attr.aria-label]="'tickets.bulk.selectAll' | transloco"
+              [aria-label]="'tickets.bulk.selectAll' | transloco"
               (change)="toggleAll($event.checked)"
             />
           </th>
           <td mat-cell *matCellDef="let ticket" class="select">
             <mat-checkbox
               [checked]="selected().has(ticket.id)"
-              [attr.aria-label]="'tickets.bulk.selectOne' | transloco: { number: ticket.number }"
+              [aria-label]="'tickets.bulk.selectOne' | transloco: { number: ticket.number }"
               (change)="toggle(ticket.id, $event.checked)"
             />
           </td>
