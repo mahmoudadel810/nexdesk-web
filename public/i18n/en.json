@@ -34,7 +34,8 @@
     "sla": "SLA",
     "knowledgeBase": "Knowledge base",
     "automation": "Automation",
-    "billing": "Plan and billing"
+    "billing": "Plan and billing",
+    "reports": "Reports"
   },
   "roles": {
     "Owner": "Owner",
@@ -128,7 +129,9 @@
     "downgrade-agents": "This plan allows fewer team members than you have. Deactivate people or revoke invitations first.",
     "downgrade-storage": "Your attachments need more storage than this plan includes.",
     "downgrade-automation": "This plan allows fewer automation rules than you have. Delete some rules first.",
-    "portal-unavailable": "We cannot take this in right now. Please contact us another way."
+    "portal-unavailable": "We cannot take this in right now. Please contact us another way.",
+    "invalid-report-range": "Choose a start date on or before the end date, at most 366 days apart.",
+    "report-not-found": "This report does not exist."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -264,10 +267,16 @@
   },
   "home": {
     "welcome": "Welcome, {{name}}",
-    "workspaceCard": "Your workspace",
-    "address": "Address",
-    "role": "Your role",
-    "timezone": "Time zone"
+    "subtitle": "How {{workspace}} is doing over the last 30 days.",
+    "newTicket": "New ticket",
+    "kpis": "Key figures",
+    "unassigned": "Unassigned: {{count}}",
+    "solved": "Solved: {{count}}",
+    "resolution": "Resolution: {{time}}",
+    "csat": "CSAT {{average}} out of 5",
+    "noCsat": "No ratings yet",
+    "last30Days": "Created and solved per day, last 30 days",
+    "allReports": "All reports"
   },
   "availability": {
     "Online": "Online",
@@ -971,6 +980,94 @@
       "cvc": "Security code",
       "pay": "Pay {{price}}",
       "confirm": "Switch plan"
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Volume, speed, SLA compliance and customer satisfaction.",
+    "export": {
+      "button": "Export CSV",
+      "names": {
+        "tickets": "Tickets in this period",
+        "volume": "Ticket volume",
+        "backlog": "Backlog",
+        "response-times": "Response times",
+        "sla-compliance": "SLA compliance",
+        "csat": "Customer satisfaction",
+        "agents": "Agent leaderboard"
+      }
+    },
+    "range": {
+      "label": "Period",
+      "days": "Last {{count}} days",
+      "custom": "Custom",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply",
+      "shown": "{{from}} to {{to}}, in {{timezone}} time"
+    },
+    "units": {
+      "minutes": "{{count}} min",
+      "hours": "{{count}} h",
+      "days": "{{count}} d"
+    },
+    "kpis": {
+      "label": "Key figures",
+      "created": "Tickets created",
+      "solved": "Tickets solved",
+      "backlog": "Open backlog",
+      "firstResponse": "Avg. first response",
+      "resolution": "Avg. resolution",
+      "sla": "SLA compliance",
+      "csat": "Customer satisfaction",
+      "now": "Right now",
+      "up": "Up {{percent}}% on the period before",
+      "down": "Down {{percent}}% on the period before",
+      "csatValue": "{{average}} / 5",
+      "responses": "Ratings: {{count}}"
+    },
+    "volume": {
+      "title": "Ticket volume",
+      "daily": "Created and solved per day",
+      "weekly": "Created and solved per week",
+      "created": "Created",
+      "solved": "Solved"
+    },
+    "backlog": {
+      "title": "Backlog by status",
+      "subtitle": "Open tickets right now. Unassigned: {{unassigned}}",
+      "byPriority": "Backlog by priority",
+      "tickets": "Tickets",
+      "empty": "Nothing is waiting. The backlog is empty."
+    },
+    "times": {
+      "title": "Response times",
+      "subtitle": "Average hours to the first reply and to the solution",
+      "firstResponse": "First response (hours)",
+      "resolution": "Resolution (hours)"
+    },
+    "sla": {
+      "title": "SLA compliance",
+      "subtitle": "Share of tickets that met their target, by priority",
+      "firstResponse": "First response met (%)",
+      "resolution": "Resolution met (%)"
+    },
+    "csat": {
+      "title": "Customer satisfaction",
+      "subtitle": "{{average}} out of 5 from {{responses}} ratings, {{satisfied}}% satisfied",
+      "empty": "No ratings in this period.",
+      "stars": "{{count}} ★",
+      "responses": "Ratings"
+    },
+    "agents": {
+      "title": "Agent leaderboard",
+      "name": "Agent",
+      "solved": "Solved",
+      "open": "Open now",
+      "firstResponse": "Avg. first response",
+      "resolution": "Avg. resolution",
+      "csat": "CSAT",
+      "csatValue": "{{average}} ({{responses}})"
     }
   },
   "portal": {

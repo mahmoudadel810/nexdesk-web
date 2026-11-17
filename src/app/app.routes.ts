@@ -101,6 +101,12 @@ export const routes: Routes = [
         title: 'NexDesk',
       },
       {
+        path: 'reports',
+        canActivate: [permissionGuard('reports.view')],
+        loadComponent: () => import('./features/reports/reports').then((m) => m.Reports),
+        title: 'NexDesk',
+      },
+      {
         path: 'kb',
         canActivate: [permissionGuard('kb.view')],
         children: [
