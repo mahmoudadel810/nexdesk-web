@@ -101,6 +101,31 @@ export const routes: Routes = [
         title: 'NexDesk',
       },
       {
+        path: 'kb',
+        canActivate: [permissionGuard('kb.view')],
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            loadComponent: () => import('./features/kb/kb').then((m) => m.Kb),
+            title: 'NexDesk',
+          },
+          {
+            path: 'new',
+            canActivate: [permissionGuard('kb.manage')],
+            loadComponent: () =>
+              import('./features/kb/kb-article-editor').then((m) => m.KbArticleEditor),
+            title: 'NexDesk',
+          },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./features/kb/kb-article-editor').then((m) => m.KbArticleEditor),
+            title: 'NexDesk',
+          },
+        ],
+      },
+      {
         path: 'settings/sla',
         canActivate: [permissionGuard('sla.manage')],
         loadComponent: () => import('./features/settings/sla-settings').then((m) => m.SlaSettings),
