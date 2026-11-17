@@ -75,6 +75,7 @@ export interface TicketDetail extends TicketListItem {
     readonly subject: string;
   } | null;
   readonly version: number;
+  readonly csat: { readonly rating: number; readonly comment: string | null } | null;
 }
 
 export type CustomFieldType = 'Text' | 'Number' | 'Dropdown' | 'Checkbox' | 'Date';
@@ -153,7 +154,8 @@ export type TicketEventType =
   | 'CustomFieldChanged'
   | 'MergedInto'
   | 'MergedFrom'
-  | 'SlaBreached';
+  | 'SlaBreached'
+  | 'CsatSubmitted';
 
 export interface TimelineItem {
   readonly id: string;
