@@ -7,7 +7,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { BusinessDay, BusinessHours, Weekday } from '../core/api/workspace.api';
 
-const TIMEZONES: readonly string[] = ['UTC', ...Intl.supportedValuesOf('timeZone')];
+export const TIMEZONES: readonly string[] = ['UTC', ...Intl.supportedValuesOf('timeZone')];
 
 /** Editor for the workspace time zone and weekly opening hours. The parent reads <c>value()</c> to save. */
 @Component({

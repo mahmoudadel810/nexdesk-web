@@ -10,7 +10,8 @@
     "save": "Save",
     "edit": "Edit",
     "delete": "Delete",
-    "actions": "Actions"
+    "actions": "Actions",
+    "skipToContent": "Skip to main content"
   },
   "languages": {
     "en": "English",
@@ -37,7 +38,8 @@
     "billing": "Plan and billing",
     "reports": "Reports",
     "developers": "Developers",
-    "auditLog": "Audit log"
+    "auditLog": "Audit log",
+    "settings": "Workspace settings"
   },
   "roles": {
     "Owner": "Owner",
@@ -126,6 +128,9 @@
     "api-key-not-found": "This API key no longer exists.",
     "webhook-not-found": "This webhook no longer exists.",
     "webhook-delivery-not-found": "This delivery no longer exists.",
+    "logo-type": "Upload the logo as a PNG, JPEG or WebP image.",
+    "logo-too-large": "The logo must be at most 512 KB.",
+    "logo-not-found": "This workspace has no logo.",
     "plan-not-found": "This plan does not exist.",
     "invoice-not-found": "This invoice no longer exists.",
     "already-on-plan": "The workspace is already on this plan.",
@@ -987,6 +992,38 @@
       "pay": "Pay {{price}}",
       "confirm": "Switch plan"
     }
+  },
+  "settings": {
+    "title": "Workspace settings",
+    "subtitle": "Your workspace's name, region and language, and how the help centre looks to customers.",
+    "general": "General",
+    "name": "Workspace name",
+    "address": "Help centre address",
+    "addressHint": "Customers sign in and send requests here.",
+    "timezone": "Time zone",
+    "timezoneHint": "SLA deadlines, business hours and reports follow it.",
+    "language": "Default language",
+    "languageHint": "The language new customers and emails start in.",
+    "branding": "Help centre branding",
+    "brandingHint": "Shown to customers in the help centre.",
+    "logoAlt": "Workspace logo",
+    "uploadLogo": "Upload logo",
+    "replaceLogo": "Replace logo",
+    "removeLogo": "Remove logo",
+    "logoHint": "PNG, JPEG or WebP, up to 512 KB. A wide logo on a transparent background looks best.",
+    "logoSaved": "Logo updated.",
+    "removeLogoTitle": "Remove the logo?",
+    "removeLogoBody": "The help centre will show the workspace name instead.",
+    "color": "Accent colour",
+    "pickColor": "Pick the accent colour",
+    "colorInvalid": "Enter # followed by six hexadecimal digits, such as #2e7d32.",
+    "resetColor": "Use the default",
+    "lowContrast": "This colour is light. Buttons and links in it may be hard to read; a darker shade works better.",
+    "welcome": "Welcome text",
+    "welcomeHint": "Greets customers on the help centre home page.",
+    "preview": "Preview",
+    "openPortal": "Open the help centre",
+    "saved": "Settings saved."
   },
   "audit": {
     "title": "Audit log",

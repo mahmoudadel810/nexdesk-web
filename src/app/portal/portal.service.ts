@@ -21,6 +21,11 @@ export interface PortalInfo {
   readonly name: string;
   readonly slug: string;
   readonly defaultLanguage: string;
+  /** The help centre's accent colour as #rrggbb, or null for NexDesk's own. */
+  readonly brandColor?: string | null;
+  readonly welcomeText?: string | null;
+  /** A versioned address of the logo image, or null when the workspace has none. */
+  readonly logoUrl?: string | null;
 }
 
 export interface PortalCustomer {

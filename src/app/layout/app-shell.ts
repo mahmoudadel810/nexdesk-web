@@ -60,6 +60,12 @@ const NAV_ITEMS: readonly NavItem[] = [
     permission: 'custom-fields.manage',
   },
   {
+    path: '/app/settings/workspace',
+    icon: 'settings',
+    label: 'nav.settings',
+    permission: 'settings.manage',
+  },
+  {
     path: '/app/settings/developers',
     icon: 'code',
     label: 'nav.developers',
@@ -99,6 +105,9 @@ const NAV_ITEMS: readonly NavItem[] = [
     TranslocoPipe,
   ],
   template: `
+    <a class="skip-link" href="#main" (click)="skipToMain($event)">{{
+      'common.skipToContent' | transloco
+    }}</a>
     <mat-toolbar class="header">
       @if (compact()) {
         <button
@@ -196,7 +205,7 @@ const NAV_ITEMS: readonly NavItem[] = [
         </mat-nav-list>
       </mat-sidenav>
       <mat-sidenav-content>
-        <main class="content">
+        <main id="main" class="content" tabindex="-1">
           <router-outlet />
         </main>
       </mat-sidenav-content>
@@ -343,6 +352,12 @@ export class AppShell {
       .map((part) => part[0]?.toLocaleUpperCase())
       .join(''),
   );
+
+  /** Moves keyboard focus past the menus without changing the address. */
+  protected skipToMain(event: Event): void {
+    event.preventDefault();
+    document.getElementById('main')?.focus();
+  }
 
   constructor() {
     void this.realtime.start();
