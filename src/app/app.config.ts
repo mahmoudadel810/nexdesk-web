@@ -8,11 +8,16 @@ import {
 } from '@angular/core';
 import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { provideTransloco } from '@jsverse/transloco';
+import { TranslocoService, provideTransloco } from '@jsverse/transloco';
+import { firstValueFrom } from 'rxjs';
 import { routes } from './app.routes';
 import { AuthService } from './core/auth/auth.service';
 import { authInterceptor, errorInterceptor, loadingInterceptor } from './core/http/interceptors';
-import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from './core/i18n/language.service';
+import {
+  DEFAULT_LANGUAGE,
+  LanguageService,
+  SUPPORTED_LANGUAGES,
+} from './core/i18n/language.service';
 import { TranslocoHttpLoader } from './core/i18n/transloco-loader';
 
 export const appConfig: ApplicationConfig = {
@@ -34,6 +39,14 @@ export const appConfig: ApplicationConfig = {
       loader: TranslocoHttpLoader,
     }),
     provideAppInitializer(() => inject(AuthService).restore()),
+    // Components that copy a label once, such as a select showing its chosen option, would otherwise
+    // keep the empty text they saw before the translations arrived.
+    provideAppInitializer(() =>
+      firstValueFrom(inject(TranslocoService).load(inject(LanguageService).language())).then(
+        () => undefined,
+        () => undefined,
+      ),
+    ),
     { provide: MAT_ICON_DEFAULT_OPTIONS, useValue: { fontSet: 'material-symbols-outlined' } },
   ],
 };

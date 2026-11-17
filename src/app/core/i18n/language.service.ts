@@ -49,8 +49,24 @@ export class LanguageService {
         this.directionality.valueSignal.set(direction);
         // Components such as the side menu only re-lay themselves out when this emits.
         this.directionality.change.emit(direction);
+        this.remeasureFormFields();
       }
     });
+  }
+
+  /**
+   * Outlined form fields place a floating label beside a prefix icon by measuring the icon, and measure
+   * again only when its size changes. Resizing the prefixes for one frame makes them measure again with
+   * the new reading direction.
+   */
+  private remeasureFormFields(): void {
+    const root = this.document.documentElement;
+    root.classList.add('nd-remeasure-fields');
+    this.document.defaultView?.requestAnimationFrame(() =>
+      this.document.defaultView?.requestAnimationFrame(() =>
+        root.classList.remove('nd-remeasure-fields'),
+      ),
+    );
   }
 
   use(language: AppLanguage): void {
