@@ -100,7 +100,9 @@
     "shared-views-restricted": "Only admins can create or change views shared with everyone.",
     "holiday-not-found": "This holiday no longer exists.",
     "holiday-exists": "A holiday is already defined for this date.",
-    "notification-not-found": "This notification no longer exists."
+    "notification-not-found": "This notification no longer exists.",
+    "workspace-not-found": "This help centre does not exist.",
+    "ticket-not-solved": "A request can be rated once it has been solved."
   },
   "landing": {
     "title": "Customer support your whole team can run",
@@ -491,7 +493,9 @@
       "solved": "Solved",
       "watchers": "Watchers",
       "notFoundTitle": "Ticket not found",
-      "notFoundBody": "It may have been deleted, or the link is wrong."
+      "notFoundBody": "It may have been deleted, or the link is wrong.",
+      "csat": "Customer rating",
+      "csatRating": "{{rating}} out of 5"
     },
     "composer": {
       "mode": "Message type",
@@ -525,7 +529,8 @@
         "CustomFieldChanged": "{{actor}} changed {{field}} from {{from}} to {{to}}",
         "MergedInto": "{{actor}} merged this ticket into {{to}}",
         "MergedFrom": "{{actor}} merged ticket {{to}} into this one",
-        "SlaBreached": "The {{to}} deadline was missed"
+        "SlaBreached": "The {{to}} deadline was missed",
+        "CsatSubmitted": "{{actor}} rated the support {{to}} out of 5"
       }
     },
     "search": "Search subject, messages, requester or #number",
@@ -672,6 +677,77 @@
       "TicketNote": "{{actor}} added a note on ticket #{{number}}",
       "SlaWarning": "Ticket #{{number}} is close to its {{metric}} deadline",
       "SlaBreach": "Ticket #{{number}} missed its {{metric}} deadline"
+    }
+  },
+  "portal": {
+    "home": "{{name}} help centre",
+    "poweredBy": "Powered by NexDesk",
+    "notFoundTitle": "Help centre not found",
+    "notFoundBody": "Check the address, or ask the company for the link to their help centre.",
+    "nav": {
+      "requests": "My requests"
+    },
+    "status": {
+      "New": "Received",
+      "Open": "In progress",
+      "Pending": "Waiting for your reply",
+      "OnHold": "On hold",
+      "Solved": "Solved",
+      "Closed": "Closed"
+    },
+    "welcome": {
+      "title": "How can {{name}} help?",
+      "body": "Send us a request and follow the conversation here. We will also keep you posted by email."
+    },
+    "login": {
+      "subtitle": "Sign in to follow your requests with {{name}}.",
+      "noAccount": "First time here?"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Follow your requests with {{name}} in one place.",
+      "submit": "Create account",
+      "sent": "We sent a confirmation link to {{email}}. Open it to finish signing up."
+    },
+    "verify": {
+      "failedBody": "The confirmation link is invalid or has expired. Sign up again to get a new one.",
+      "success": "Email confirmed. Welcome!"
+    },
+    "forgot": {
+      "subtitle": "Enter your email address and we will send you a link to choose a password. This also works if you have only contacted us by email so far."
+    },
+    "requests": {
+      "title": "My requests",
+      "subtitle": "Everything you have asked us, newest activity first.",
+      "new": "New request",
+      "newTitle": "New request",
+      "newSubtitle": "Describe what you need. The more detail, the faster we can help.",
+      "description": "How can we help?",
+      "submit": "Send request",
+      "created": "Request #{{number}} sent.",
+      "emptyTitle": "No requests yet",
+      "emptyBody": "When you send us a request, it shows up here with our replies.",
+      "conversation": "Conversation",
+      "supportTeam": "Support team",
+      "reply": "Write a reply",
+      "replyReopens": "Still need help? Reply to reopen this request",
+      "send": "Send reply",
+      "closed": "This request is closed. Send a new request if you need more help.",
+      "notFoundTitle": "Request not found",
+      "notFoundBody": "It may belong to another account, or the link is wrong."
+    },
+    "csat": {
+      "title": "How did we do?",
+      "thanksTitle": "Thanks for your feedback",
+      "about": "Request #{{number}}: {{subject}}",
+      "ratingLabel": "Your rating",
+      "stars": "{{count}} out of 5 stars",
+      "comment": "Anything you want to add? (optional)",
+      "submit": "Send rating",
+      "update": "Update rating",
+      "saved": "Thank you, your rating was saved.",
+      "invalidTitle": "This survey link is no longer valid",
+      "invalidBody": "It may have expired. You can still rate the request after signing in."
     }
   }
 }
