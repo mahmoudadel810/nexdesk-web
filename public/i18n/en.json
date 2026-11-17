@@ -856,7 +856,7 @@
       "subtitle": "Choose when the rule runs, what must be true, and what it does.",
       "name": "Rule name",
       "trigger": "Runs",
-      "timeHint": "Checked every five minutes.",
+      "timeHint": "Checked every five minutes. Solved tickets are skipped unless a condition names a status.",
       "position": "Order",
       "positionHint": "Lower runs first.",
       "enabled": "Rule is on",

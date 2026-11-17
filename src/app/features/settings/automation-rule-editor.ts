@@ -576,6 +576,7 @@ function actionValid(row: ActionRow): boolean {
 
     .editor {
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: 16px;
       max-inline-size: 960px;
     }

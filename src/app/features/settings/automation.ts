@@ -100,6 +100,7 @@ import { AutomationLogDialog } from './automation-log-dialog';
   styles: `
     .rules {
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: 16px;
       max-inline-size: 880px;
     }
