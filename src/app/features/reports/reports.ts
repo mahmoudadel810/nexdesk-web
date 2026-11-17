@@ -431,8 +431,7 @@ export class Reports {
       return [];
     }
 
-    const t = (key: string, params?: Record<string, unknown>) =>
-      this.notifier.translate(key, params);
+    const t = (key: string, params?: Record<string, unknown>) => this.t(key, params);
     const percent = (value: number | null) => (value === null ? '–' : `${this.number(value)}%`);
     return [
       {
@@ -570,8 +569,8 @@ export class Reports {
   }
 
   private t(key: string, params?: Record<string, unknown>): string {
-    // Reading the language makes labels follow a language switch.
-    this.language.language();
+    // Reading this makes labels follow a language switch, including the wait for the new texts.
+    this.language.translations();
     return this.notifier.translate(key, params);
   }
 

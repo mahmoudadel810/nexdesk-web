@@ -1,6 +1,8 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { DOCUMENT, Injectable, computed, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@jsverse/transloco';
+import { merge, scan } from 'rxjs';
 import { readStored, writeStored } from '../browser-storage';
 
 export type AppLanguage = 'en' | 'ar';
@@ -24,6 +26,17 @@ export class LanguageService {
   readonly language = this.current.asReadonly();
   readonly direction = computed(() => (this.current() === 'ar' ? 'rtl' : 'ltr'));
 
+  /**
+   * Changes whenever translated text may read differently: after a language switch and again once
+   * that language's texts have arrived. Code that translates outside a template reads it to stay current.
+   */
+  readonly translations = toSignal(
+    merge(this.transloco.langChanges$, this.transloco.events$).pipe(
+      scan((version) => version + 1, 0),
+    ),
+    { initialValue: 0 },
+  );
+
   constructor() {
     effect(() => {
       const language = this.current();
@@ -32,7 +45,11 @@ export class LanguageService {
       this.transloco.setActiveLang(language);
       this.document.documentElement.lang = language;
       this.document.documentElement.dir = direction;
-      this.directionality.valueSignal.set(direction);
+      if (this.directionality.value !== direction) {
+        this.directionality.valueSignal.set(direction);
+        // Components such as the side menu only re-lay themselves out when this emits.
+        this.directionality.change.emit(direction);
+      }
     });
   }
 

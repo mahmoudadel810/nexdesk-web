@@ -45,6 +45,22 @@ describe('LanguageService', () => {
     expect(TestBed.inject(TranslocoService).getActiveLang()).toBe('ar');
   });
 
+  it('announces a direction change so laid-out components such as the side menu follow it', () => {
+    const service = setup();
+    TestBed.tick();
+    const changes: string[] = [];
+    TestBed.inject(Directionality).change.subscribe((direction) => changes.push(direction));
+
+    service.use('ar');
+    TestBed.tick();
+    service.use('ar');
+    TestBed.tick();
+    service.use('en');
+    TestBed.tick();
+
+    expect(changes).toEqual(['rtl', 'ltr']);
+  });
+
   it('remembers the chosen language', () => {
     setup().use('ar');
     TestBed.resetTestingModule();

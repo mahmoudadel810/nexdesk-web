@@ -136,7 +136,7 @@ export class Home {
     this.volume().map((point) => axisDate(point.date, this.language.language())),
   );
   protected readonly series = computed<ChartSeries[]>(() => {
-    this.language.language();
+    this.language.translations();
     return [
       {
         label: this.notifier.translate('reports.volume.created'),

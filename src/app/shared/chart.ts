@@ -134,7 +134,7 @@ export class AppChart implements OnDestroy {
     this.theme.isDark();
     const rtl = this.language.direction() === 'rtl';
     const styles = getComputedStyle(this.host.nativeElement);
-    const colour = (name: string) => styles.getPropertyValue(name).trim() || '#888';
+    const colour = (name: string) => this.resolve(name);
     Chart.defaults.font.family = styles.fontFamily;
     const text = colour('--mat-sys-on-surface-variant');
     const grid = colour('--mat-sys-outline-variant');
@@ -168,12 +168,13 @@ export class AppChart implements OnDestroy {
           backgroundColor: doughnut
             ? this.categories().map((_, slice) => colours[slice % colours.length])
             : kind === 'line'
-              ? `color-mix(in srgb, ${colours[index % colours.length]} 14%, transparent)`
+              ? translucent(colours[index % colours.length])
               : colours[index % colours.length],
           borderWidth: kind === 'bar' ? 0 : 2,
           borderRadius: kind === 'bar' ? 4 : 0,
           fill: kind === 'line' && this.series().length === 1,
-          tension: 0.3,
+          // Smooth, but never swinging below zero between two points the way a plain spline does.
+          cubicInterpolationMode: 'monotone' as const,
           pointRadius: this.categories().length > 45 ? 0 : 2,
           spanGaps: true,
         })),
@@ -215,4 +216,28 @@ export class AppChart implements OnDestroy {
   ngOnDestroy(): void {
     this.chart?.destroy();
   }
+
+  /**
+   * The colour a theme token stands for right now. Tokens are written as `light-dark(...)`, which a
+   * canvas cannot read, so the browser resolves them on a throwaway element first.
+   */
+  private resolve(token: string): string {
+    const probe = document.createElement('span');
+    probe.style.color = `var(${token})`;
+    this.host.nativeElement.appendChild(probe);
+    const resolved = getComputedStyle(probe).color;
+    probe.remove();
+    return resolved || '#888';
+  }
+}
+
+/** The same colour, mostly see-through, for the area under a line. */
+function translucent(colour: string): string {
+  const channels = /^rgba?\(([^)]+)\)$/
+    .exec(colour)?.[1]
+    .split(/[,\s/]+/)
+    .filter(Boolean);
+  return channels && channels.length >= 3
+    ? `rgba(${channels[0]}, ${channels[1]}, ${channels[2]}, 0.14)`
+    : colour;
 }
