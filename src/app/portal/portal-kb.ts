@@ -299,11 +299,9 @@ export class PortalHelpSuggestions {
         <article>
           <p class="category">{{ current.categoryName }}</p>
           <h1>{{ current.title }}</h1>
-          @if (current.updatedAt ?? current.publishedAt; as date) {
-            <p class="updated">
-              {{ 'portal.kb.updated' | transloco }} {{ date | localDate: 'date' }}
-            </p>
-          }
+          <p class="updated">
+            {{ 'portal.kb.updated' | transloco }} {{ current.updatedAt | localDate: 'date' }}
+          </p>
           <div class="markdown-body" [innerHTML]="current.bodyHtml"></div>
         </article>
 

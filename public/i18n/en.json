@@ -738,7 +738,7 @@
       "newSubtitle": "Write in Markdown. The article stays a draft until you publish it.",
       "editTitle": "Edit article",
       "updated": "Updated",
-      "stats": "{{views}} views, {{helpful}} found it helpful, {{notHelpful}} did not",
+      "stats": "Views: {{views}} · Helpful: {{helpful}} · Not helpful: {{notHelpful}}",
       "view": "View in help centre",
       "modeLabel": "Editor mode",
       "write": "Write",

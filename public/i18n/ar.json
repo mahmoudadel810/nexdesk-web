@@ -738,7 +738,7 @@
       "newSubtitle": "اكتب بصيغة Markdown. تبقى المقالة مسودة حتى تنشرها.",
       "editTitle": "تعديل المقالة",
       "updated": "آخر تحديث",
-      "stats": "المشاهدات: {{views}}، وجدها مفيدة: {{helpful}}، لم يجدها مفيدة: {{notHelpful}}",
+      "stats": "المشاهدات: {{views}} · مفيدة: {{helpful}} · غير مفيدة: {{notHelpful}}",
       "view": "عرض في مركز المساعدة",
       "modeLabel": "وضع المحرر",
       "write": "كتابة",

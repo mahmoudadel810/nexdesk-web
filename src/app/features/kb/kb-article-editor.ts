@@ -80,11 +80,9 @@ import { LocalDatePipe } from '../../shared/local-date.pipe';
               <span class="badge" [class.muted]="current.status === 'Draft'">
                 {{ 'kb.status.' + current.status | transloco }}
               </span>
-              @if (current.updatedAt) {
-                · {{ 'kb.editor.updated' | transloco }}
-                {{ current.updatedAt | localDate: 'relative' }}
-              }
-              · {{ 'kb.editor.stats' | transloco: stats() }}
+              · {{ 'kb.editor.updated' | transloco }}
+              {{ current.updatedAt | localDate: 'relative' }} ·
+              {{ 'kb.editor.stats' | transloco: stats() }}
             </p>
           } @else {
             <p>{{ 'kb.editor.newSubtitle' | transloco }}</p>

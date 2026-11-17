@@ -23,7 +23,7 @@ export interface KbArticleListItem {
   readonly categoryName: string;
   readonly status: KbArticleStatus;
   readonly publishedAt: string | null;
-  readonly updatedAt: string | null;
+  readonly updatedAt: string;
   readonly viewCount: number;
   readonly helpfulCount: number;
   readonly notHelpfulCount: number;

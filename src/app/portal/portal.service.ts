@@ -87,7 +87,7 @@ export interface HelpArticle {
   readonly categoryName: string;
   readonly bodyHtml: string;
   readonly publishedAt: string | null;
-  readonly updatedAt: string | null;
+  readonly updatedAt: string;
 }
 
 interface PortalState {
