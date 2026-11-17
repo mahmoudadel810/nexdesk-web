@@ -190,13 +190,14 @@ describe('TicketTimeline', () => {
     };
   }
 
-  async function render(items: TimelineItem[]): Promise<HTMLElement> {
+  async function render(items: TimelineItem[], mentionable: string[] = []): Promise<HTMLElement> {
     TestBed.configureTestingModule({
       imports: [TicketTimeline, translations],
       providers: [provideHttpClient(), provideHttpClientTesting()],
     });
     const fixture = TestBed.createComponent(TicketTimeline);
     fixture.componentRef.setInput('items', items);
+    fixture.componentRef.setInput('mentionable', mentionable);
     await fixture.whenStable();
     return fixture.nativeElement as HTMLElement;
   }
@@ -246,6 +247,19 @@ describe('TicketTimeline', () => {
     expect(messages[0].querySelector('.attachment')?.textContent).toContain('2.0 KB');
     expect(messages[1].classList.contains('internal')).toBe(false);
     expect(messages[1].textContent).not.toContain(en.tickets.timeline.internalNote);
+  });
+
+  it('highlights mentions of teammates and keeps the text intact', async () => {
+    const element = await render(
+      [item({ kind: 'Message', body: '@maya patel can you check?\n@Nobody' })],
+      ['Maya Patel'],
+    );
+
+    const body = element.querySelector('.body')!;
+    expect(body.textContent).toBe('@maya patel can you check?\n@Nobody');
+    expect([...body.querySelectorAll('.mention')].map((m) => m.textContent)).toEqual([
+      '@maya patel',
+    ]);
   });
 });
 

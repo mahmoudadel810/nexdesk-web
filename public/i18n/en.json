@@ -439,7 +439,8 @@
         "TicketNote": "Someone adds an internal note on a ticket I follow",
         "SlaWarning": "A deadline of my ticket is close",
         "SlaBreach": "A deadline is missed",
-        "Automation": "An automation rule notifies me"
+        "Automation": "An automation rule notifies me",
+        "Mention": "A teammate mentions me"
       }
     }
   },
@@ -548,6 +549,7 @@
       "reply": "Public reply",
       "note": "Internal note",
       "replyPlaceholder": "Reply to {{name}}",
+      "mentionHint": "Type @ to mention a teammate. They will be notified and start watching the ticket.",
       "notePlaceholder": "Note for your team; the customer will not see it",
       "submitAs": "Then set status to",
       "keepStatus": "Keep current status",
@@ -724,7 +726,8 @@
       "TicketNote": "{{actor}} added a note on ticket #{{number}}",
       "SlaWarning": "Ticket #{{number}} is close to its {{metric}} deadline",
       "SlaBreach": "Ticket #{{number}} missed its {{metric}} deadline",
-      "Automation": "{{actor}}: ticket #{{number}}"
+      "Automation": "{{actor}}: ticket #{{number}}",
+      "Mention": "{{actor}} mentioned you on ticket #{{number}}"
     }
   },
   "kb": {

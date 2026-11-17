@@ -5,6 +5,8 @@ cd "$(dirname "$0")/.."
 
 npm run lint
 npm run format:check
+# The end-to-end suite needs a running stack, so here it is only type-checked; `npm run e2e` runs it.
+npx tsc -p e2e/tsconfig.json
 npm test
 npm run build
 

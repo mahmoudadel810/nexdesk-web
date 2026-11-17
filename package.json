@@ -9,8 +9,10 @@
     "test": "ng test --watch=false",
     "lint": "ng lint",
     "test:watch": "ng test",
-    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\""
+    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\" \"e2e/**/*.ts\" playwright.config.ts",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"e2e/**/*.ts\" playwright.config.ts",
+    "e2e": "playwright test --project=chromium",
+    "screenshots": "playwright test --project=screenshots"
   },
   "private": true,
   "packageManager": "npm@11.19.1",
@@ -34,6 +36,8 @@
     "@angular/cli": "^22.2.7",
     "@angular/compiler-cli": "^22.2.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "1.65.1",
+    "@types/node": "24.19.2",
     "angular-eslint": "22.7.0",
     "eslint": "^10.14.0",
     "jsdom": "^30.0.0",
