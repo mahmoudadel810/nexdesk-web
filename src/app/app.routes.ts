@@ -1,5 +1,12 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard, onboardingGuard, permissionGuard } from './core/auth/auth.guards';
+import {
+  authGuard,
+  guestGuard,
+  onboardingGuard,
+  permissionGuard,
+  platformAdminGuard,
+  workspaceGuard,
+} from './core/auth/auth.guards';
 
 export const routes: Routes = [
   {
@@ -49,13 +56,37 @@ export const routes: Routes = [
   },
   {
     path: 'onboarding',
-    canActivate: [authGuard, permissionGuard('settings.manage')],
+    canActivate: [authGuard, workspaceGuard, permissionGuard('settings.manage')],
     loadComponent: () => import('./features/onboarding/onboarding').then((m) => m.Onboarding),
     title: 'NexDesk',
   },
   {
+    path: 'admin',
+    canActivate: [authGuard, platformAdminGuard],
+    loadComponent: () => import('./admin/admin-shell').then((m) => m.AdminShell),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () => import('./admin/admin-overview').then((m) => m.AdminOverview),
+        title: 'NexDesk admin',
+      },
+      {
+        path: 'tenants',
+        loadComponent: () => import('./admin/admin-tenants').then((m) => m.AdminTenants),
+        title: 'NexDesk admin',
+      },
+      {
+        path: 'tenants/:id',
+        loadComponent: () =>
+          import('./admin/admin-tenant-detail').then((m) => m.AdminTenantDetailPage),
+        title: 'NexDesk admin',
+      },
+    ],
+  },
+  {
     path: 'app',
-    canActivate: [authGuard, onboardingGuard],
+    canActivate: [authGuard, workspaceGuard, onboardingGuard],
     loadComponent: () => import('./layout/app-shell').then((m) => m.AppShell),
     children: [
       {
