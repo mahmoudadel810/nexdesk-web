@@ -15,6 +15,10 @@ import { LocalDatePipe } from '../shared/local-date.pipe';
 const SHOWN = 8;
 
 /** Text of a notification in the active language. */
+function isSlaNotification(notification: AppNotification): boolean {
+  return notification.type === 'SlaWarning' || notification.type === 'SlaBreach';
+}
+
 export function describeNotification(
   notification: AppNotification,
   translate: (key: string, params?: Record<string, unknown>) => string,
@@ -22,7 +26,10 @@ export function describeNotification(
   return translate(`notifications.types.${notification.type}`, {
     actor: notification.actorName ?? translate('notifications.someone'),
     number: notification.ticketNumber,
-    metric: notification.preview ? translate(`sla.metricNames.${notification.preview}`) : '',
+    metric:
+      isSlaNotification(notification) && notification.preview
+        ? translate(`sla.metricNames.${notification.preview}`)
+        : '',
   });
 }
 
@@ -179,7 +186,7 @@ export class NotificationBell {
   }
 
   protected isSla(notification: AppNotification): boolean {
-    return notification.type === 'SlaWarning' || notification.type === 'SlaBreach';
+    return isSlaNotification(notification);
   }
 
   protected icon(notification: AppNotification): string {
@@ -192,6 +199,8 @@ export class NotificationBell {
         return 'timer';
       case 'SlaBreach':
         return 'error';
+      case 'Automation':
+        return 'bolt';
       default:
         return 'chat';
     }
