@@ -14,8 +14,8 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
 
-  # The API reference (Scalar) and the OpenAPI document it reads.
-  location ~ ^/(docs|openapi)(/|$) {
+  # The API reference (Scalar), the OpenAPI document it reads, and the admin-only job dashboard.
+  location ~ ^/(docs|openapi|hangfire)(/|$) {
     proxy_pass ${API_UPSTREAM};
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

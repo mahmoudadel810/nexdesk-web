@@ -9,8 +9,26 @@ export const authGuard: CanActivateFn = (_route, state) => {
     : inject(Router).createUrlTree(['/auth/login'], { queryParams: { returnUrl: state.url } });
 };
 
-export const guestGuard: CanActivateFn = () =>
-  inject(AuthService).isAuthenticated() ? inject(Router).createUrlTree(['/app']) : true;
+export const guestGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  return auth.isAuthenticated() ? inject(Router).createUrlTree([homeOf(auth)]) : true;
+};
+
+/** Where a signed-in person belongs: the platform console for admins, their workspace for everyone else. */
+export function homeOf(auth: AuthService): string {
+  return auth.session()?.user.isPlatformAdmin ? '/admin' : '/app';
+}
+
+/** Keeps the platform admin, who belongs to no workspace, out of the workspace screens. */
+export const workspaceGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  return auth.session()?.user.isPlatformAdmin ? inject(Router).createUrlTree(['/admin']) : true;
+};
+
+export const platformAdminGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  return auth.session()?.user.isPlatformAdmin ? true : inject(Router).createUrlTree(['/app']);
+};
 
 /** Sends workspace admins to the setup wizard until they have finished it. */
 export const onboardingGuard: CanActivateFn = () => {

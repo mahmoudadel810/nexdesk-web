@@ -993,6 +993,99 @@
       "confirm": "Switch plan"
     }
   },
+  "admin": {
+    "title": "NexDesk admin",
+    "jobs": "Background jobs",
+    "nav": {
+      "label": "Platform console",
+      "overview": "Overview",
+      "tenants": "Workspaces"
+    },
+    "status": {
+      "Active": "Active",
+      "Suspended": "Suspended"
+    },
+    "plans": {
+      "free": "Free",
+      "pro": "Pro",
+      "business": "Business"
+    },
+    "overview": {
+      "title": "Platform overview",
+      "subtitle": "Revenue, sign-ups and workspaces across NexDesk.",
+      "figures": "Headline figures",
+      "mrr": "Monthly recurring revenue",
+      "mrrNote": "Plan prices of active workspaces",
+      "paying": "Paying workspaces",
+      "arpa": "{{amount}} per paying workspace",
+      "workspaces": "Workspaces",
+      "statusSplit": "{{active}} active, {{suspended}} suspended",
+      "signups": "New sign-ups",
+      "last30": "In the last 30 days",
+      "revenueTitle": "Revenue under contract",
+      "revenueHint": "Paid plans running at the end of each month",
+      "revenueSeries": "Revenue (USD)",
+      "signupsTitle": "Sign-ups",
+      "signupsHint": "New workspaces per month",
+      "signupSeries": "Workspaces",
+      "plansTitle": "Revenue by plan",
+      "activeOnPlan": "Active workspaces"
+    },
+    "tenants": {
+      "title": "Workspaces",
+      "subtitle": "{{count}} workspaces. Open one for a read-only overview.",
+      "search": "Search name, address or owner email",
+      "status": "Status",
+      "plan": "Plan",
+      "sort": "Sort by",
+      "all": "All",
+      "sorts": {
+        "Newest": "Newest first",
+        "Oldest": "Oldest first",
+        "Name": "Name",
+        "Revenue": "Highest plan price"
+      },
+      "workspace": "Workspace",
+      "agents": "Team",
+      "tickets": "Tickets this month",
+      "owner": "Owner",
+      "created": "Created",
+      "none": "No workspaces match."
+    },
+    "detail": {
+      "readOnly": "A read-only overview. It shows no tickets or customer details, and there is no way to sign in as this workspace.",
+      "suspend": "Suspend workspace",
+      "suspendTitle": "Suspend {{name}}?",
+      "suspendReason": "Reason, kept for the platform team",
+      "suspended": "Workspace suspended. Its team, customers and integrations are locked out.",
+      "reactivate": "Reactivate",
+      "reactivateTitle": "Reactivate {{name}}?",
+      "reactivateBody": "The team, customers and integrations can use the workspace again at once.",
+      "reactivated": "Workspace reactivated.",
+      "suspendedSince": "Suspended since {{date}}.",
+      "reason": "Reason: {{reason}}",
+      "plan": "Plan and setup",
+      "renews": "Paid until",
+      "timezone": "Time zone",
+      "language": "Default language",
+      "setup": "Setup wizard",
+      "setupDone": "Finished",
+      "setupPending": "Not finished",
+      "usage": "Usage against plan limits",
+      "integrations": "{{keys}} active API keys · {{webhooks}} webhooks",
+      "activity": "Activity",
+      "tickets": "Tickets",
+      "open": "Unresolved tickets",
+      "customers": "Customers",
+      "articles": "Help articles",
+      "lastActivity": "Last ticket activity",
+      "admins": "Owners and admins",
+      "lastLogin": "Last sign-in",
+      "never": "never",
+      "invoices": "Recent invoices",
+      "noInvoices": "No invoices yet; the workspace has always been on the free plan."
+    }
+  },
   "settings": {
     "title": "Workspace settings",
     "subtitle": "Your workspace's name, region and language, and how the help centre looks to customers.",
