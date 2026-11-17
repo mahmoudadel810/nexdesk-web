@@ -95,6 +95,24 @@ nginx in the container serves the app and forwards `/api`, `/hubs`, the API refe
 `/openapi`) and the job dashboard (`/hangfire`) to `API_UPSTREAM`, which defaults to `http://api:8080`,
 the API's service name on the compose network.
 
+### Hosting on Vercel
+
+[`vercel.json`](vercel.json) builds the app (`npm run build`, output `dist/nexdesk-web/browser`), sends
+unknown paths to `index.html` for client-side routing, and rewrites `/api`, `/hubs`, `/docs`, `/openapi`
+and `/hangfire` to the API on Render (`https://nexdesk-api.onrender.com`). The browser therefore talks to
+one origin and the refresh-token cookie stays first-party. Change the rewrite destinations if the API
+lives elsewhere.
+
+```bash
+npm i -g vercel
+vercel login
+vercel deploy --prod
+```
+
+Vercel rewrites do not carry WebSockets, so SignalR falls back to server-sent events or long polling on
+its own. The [API README](https://github.com/mahmoudadel810/nexdesk-api#hosted-demo-supabase-render-and-vercel)
+covers the database and the API.
+
 ### API URL per environment
 
 `src/environments/environment.ts` (production) and `environment.development.ts` hold `apiUrl` and
@@ -128,7 +146,8 @@ e2e/          Playwright tests and the screenshot script
 ### End-to-end tests
 
 The E2E suite signs in as the demo accounts, so it needs the API with the demo data and the web app
-running. It covers an agent recording a ticket, adding a note and finding it again; the dashboard and
+running. It covers an agent recording a ticket, adding a note that @mentions a teammate and finding the
+ticket again; the dashboard and
 reports with CSV export; the help centre answering from its articles; a customer sending a request and
 following it; the switch to Arabic and right-to-left; an Arabic workspace; the owner's developer tools,
 audit log and branding; and the platform console.
@@ -143,10 +162,15 @@ npm run e2e
 `E2E_BASE_URL=http://localhost:4200 npm run e2e` after `docker run -p 4200:80 ...` above.
 
 The suite signs in many times in a few minutes. The API allows 10 sign-ins per minute from one address
-by default, so start the API with a higher limit for a full run:
+by default, so for a full run either turn request limits off or raise the sign-in limit (in the
+nexdesk-api folder):
 
 ```bash
-AUTH_RATE_LIMIT_PER_MINUTE=200 docker compose up -d api   # in the nexdesk-api folder
+RATE_LIMITING_ENABLED=false docker compose up -d api
+```
+
+```bash
+AUTH_RATE_LIMIT_PER_MINUTE=200 docker compose up -d api
 ```
 
 The tests create tickets as they go. Run `npm run screenshots` on freshly seeded data, before the E2E
