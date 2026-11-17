@@ -1,17 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  computed,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { toProblem } from '../core/http/problem';
@@ -110,13 +101,7 @@ export class PortalLogin extends PortalPage {
     this.error.set(null);
     this.portal.login(this.slug(), email, password).subscribe({
       next: () => void this.router.navigate([this.base(), 'tickets']),
-      error: (failure: unknown) => {
-        if (toProblem(failure).code === 'email-not-verified') {
-          this.portal.pendingVerificationEmail.set(email);
-        }
-
-        this.fail(failure);
-      },
+      error: (failure: unknown) => this.fail(failure),
     });
   }
 }
@@ -154,17 +139,6 @@ export class PortalLogin extends PortalPage {
             <input matInput type="email" formControlName="email" autocomplete="username" />
             <mat-error>{{ form.controls.email | fieldError }}</mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'auth.fields.password' | transloco }}</mat-label>
-            <input
-              matInput
-              type="password"
-              formControlName="password"
-              autocomplete="new-password"
-            />
-            <mat-hint>{{ 'auth.fields.passwordHint' | transloco }}</mat-hint>
-            <mat-error>{{ form.controls.password | fieldError }}</mat-error>
-          </mat-form-field>
           <button mat-flat-button type="submit" [disabled]="submitting()">
             {{ 'portal.register.submit' | transloco }}
           </button>
@@ -182,10 +156,6 @@ export class PortalRegister extends PortalPage {
   protected readonly form = this.formBuilder.group({
     fullName: ['', [Validators.required, Validators.maxLength(100)]],
     email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
-    password: [
-      '',
-      [Validators.required, Validators.minLength(8), Validators.maxLength(128), passwordStrength],
-    ],
   });
 
   protected submit(): void {
@@ -194,10 +164,10 @@ export class PortalRegister extends PortalPage {
       return;
     }
 
-    const { fullName, email, password } = this.form.getRawValue();
+    const { fullName, email } = this.form.getRawValue();
     this.submitting.set(true);
     this.error.set(null);
-    this.portal.register(this.slug(), fullName, email, password).subscribe({
+    this.portal.register(this.slug(), fullName, email).subscribe({
       next: () => this.sentTo.set(email),
       error: (failure: unknown) => {
         if (applyServerErrors(this.form, toProblem(failure))) {
@@ -206,51 +176,6 @@ export class PortalRegister extends PortalPage {
           this.fail(failure);
         }
       },
-    });
-  }
-}
-
-@Component({
-  selector: 'app-portal-verify-email',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatProgressSpinnerModule, PortalCard, RouterLink, TranslocoPipe],
-  template: `
-    @if (failed()) {
-      <app-portal-card
-        [heading]="'auth.verify.failedTitle' | transloco"
-        [subheading]="'portal.verify.failedBody' | transloco"
-      >
-        <p class="form-footer">
-          <a [routerLink]="[base(), 'register']">{{ 'portal.register.submit' | transloco }}</a>
-        </p>
-      </app-portal-card>
-    } @else {
-      <app-portal-card [heading]="'auth.verify.verifyingTitle' | transloco">
-        <div class="center" role="status">
-          <mat-spinner diameter="40" [attr.aria-label]="'auth.verify.verifyingTitle' | transloco" />
-        </div>
-      </app-portal-card>
-    }
-  `,
-  styles: `
-    .center {
-      display: grid;
-      place-items: center;
-      padding-block: 24px;
-    }
-  `,
-})
-export class PortalVerifyEmail extends PortalPage implements OnInit {
-  readonly token = input<string>();
-  protected readonly failed = signal(false);
-
-  ngOnInit(): void {
-    this.portal.verifyEmail(this.slug(), this.token() ?? '').subscribe({
-      next: () => {
-        this.notifier.success('portal.verify.success');
-        void this.router.navigate([this.base(), 'tickets']);
-      },
-      error: () => this.failed.set(true),
     });
   }
 }
@@ -321,7 +246,10 @@ export class PortalForgotPassword extends PortalPage {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [...FORM_IMPORTS],
   template: `
-    <app-portal-card [heading]="'auth.reset.title' | transloco">
+    <app-portal-card
+      [heading]="'portal.setPassword.title' | transloco"
+      [subheading]="'portal.setPassword.subtitle' | transloco: { name: workspace() }"
+    >
       <form class="form-stack" [formGroup]="form" (ngSubmit)="submit()" novalidate>
         @if (error(); as message) {
           <p class="form-alert" role="alert">
@@ -382,7 +310,7 @@ export class PortalResetPassword extends PortalPage {
       .resetPassword(this.slug(), this.token() ?? '', this.form.getRawValue().newPassword)
       .subscribe({
         next: () => {
-          this.notifier.success('auth.reset.success');
+          this.notifier.success('portal.setPassword.success');
           void this.router.navigate([this.base(), 'login']);
         },
         error: (failure: unknown) => this.fail(failure),

@@ -94,7 +94,6 @@ export class PortalService {
   readonly info = signal<PortalInfo | null>(null);
   readonly customer = computed(() => this.state()?.customer ?? null);
   readonly isAuthenticated = computed(() => this.state() !== null);
-  readonly pendingVerificationEmail = signal<string | null>(null);
 
   url(slug: string, path = ''): string {
     return `${environment.apiUrl}/portal/${encodeURIComponent(slug)}${path}`;
@@ -118,23 +117,14 @@ export class PortalService {
     return this.http.get<PortalInfo>(this.url(slug), open());
   }
 
-  register(slug: string, fullName: string, email: string, password: string): Observable<void> {
-    return this.http.post<void>(
-      this.url(slug, '/auth/register'),
-      { fullName, email, password },
-      open(),
-    );
+  /** Asks for a sign-up email. The password is chosen later, from the link in that email. */
+  register(slug: string, fullName: string, email: string): Observable<void> {
+    return this.http.post<void>(this.url(slug, '/auth/register'), { fullName, email }, open());
   }
 
   login(slug: string, email: string, password: string): Observable<PortalCustomer> {
     return this.http
       .post<PortalAuthResponse>(this.url(slug, '/auth/login'), { email, password }, open())
-      .pipe(map((response) => this.accept(slug, response)));
-  }
-
-  verifyEmail(slug: string, token: string): Observable<PortalCustomer> {
-    return this.http
-      .post<PortalAuthResponse>(this.url(slug, '/auth/verify-email'), { token }, open())
       .pipe(map((response) => this.accept(slug, response)));
   }
 
@@ -290,7 +280,6 @@ export class PortalService {
       customer: response.customer,
     });
     writeStored(hintKey(slug), '1');
-    this.pendingVerificationEmail.set(null);
     return response.customer;
   }
 }
