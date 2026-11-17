@@ -51,6 +51,7 @@ import { CustomField, CustomFieldValues } from '../../core/api/tickets.api';
               [type]="field.type === 'Number' ? 'number' : field.type === 'Date' ? 'date' : 'text'"
               [attr.step]="field.type === 'Number' ? 'any' : null"
               [attr.maxlength]="field.type === 'Text' ? 500 : null"
+              dir="auto"
               [value]="values()[field.key] ?? ''"
               [disabled]="disabled()"
               [required]="field.isRequired"
