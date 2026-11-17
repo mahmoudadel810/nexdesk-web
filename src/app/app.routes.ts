@@ -160,6 +160,12 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'settings/billing',
+        canActivate: [permissionGuard('settings.manage')],
+        loadComponent: () => import('./features/settings/billing').then((m) => m.Billing),
+        title: 'NexDesk',
+      },
+      {
         path: 'settings/custom-fields',
         canActivate: [permissionGuard('custom-fields.manage')],
         loadComponent: () =>

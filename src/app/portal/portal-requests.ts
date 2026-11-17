@@ -367,7 +367,13 @@ export class PortalTicketNew {
           void this.router.navigate([this.base(), 'tickets', ticket.id]);
         },
         error: (failure: unknown) => {
-          this.error.set(this.notifier.problemMessage(toProblem(failure)));
+          // The workspace ran out of its ticket allowance. That is not the customer's problem to solve.
+          const problem = toProblem(failure);
+          this.error.set(
+            problem.status === 402
+              ? this.notifier.translate('portal.requests.unavailable')
+              : this.notifier.problemMessage(problem),
+          );
           this.submitting.set(false);
         },
       });
