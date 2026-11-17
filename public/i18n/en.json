@@ -705,13 +705,9 @@
     },
     "register": {
       "title": "Create your account",
-      "subtitle": "Follow your requests with {{name}} in one place.",
+      "subtitle": "Follow your requests with {{name}} in one place. We will email you a link to choose your password.",
       "submit": "Create account",
-      "sent": "We sent a confirmation link to {{email}}. Open it to finish signing up."
-    },
-    "verify": {
-      "failedBody": "The confirmation link is invalid or has expired. Sign up again to get a new one.",
-      "success": "Email confirmed. Welcome!"
+      "sent": "We sent a link to {{email}}. Open it to choose your password and finish signing up."
     },
     "forgot": {
       "subtitle": "Enter your email address and we will send you a link to choose a password. This also works if you have only contacted us by email so far."
@@ -748,6 +744,11 @@
       "saved": "Thank you, your rating was saved.",
       "invalidTitle": "This survey link is no longer valid",
       "invalidBody": "It may have expired. You can still rate the request after signing in."
+    },
+    "setPassword": {
+      "title": "Choose your password",
+      "subtitle": "This is the password for your account at the {{name}} help centre.",
+      "success": "Password saved. You can sign in now."
     }
   }
 }

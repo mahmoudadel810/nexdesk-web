@@ -22,10 +22,6 @@ export const portalRoutes: Routes = [
         loadComponent: () => import('./portal-auth-pages').then((m) => m.PortalRegister),
       },
       {
-        path: 'verify-email',
-        loadComponent: () => import('./portal-auth-pages').then((m) => m.PortalVerifyEmail),
-      },
-      {
         path: 'forgot-password',
         loadComponent: () => import('./portal-auth-pages').then((m) => m.PortalForgotPassword),
       },
