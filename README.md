@@ -20,7 +20,8 @@ The API, the architecture diagrams and the data model live in
   the audit log, and plans and billing.
 - **Reports:** charts for volume, backlog, response times, SLA compliance and satisfaction, an agent
   leaderboard and CSV export.
-- **Knowledge base:** a Markdown editor for agents and a searchable public help centre.
+- **Knowledge base:** a Markdown editor for agents and a searchable public help centre. The reply composer
+  links a published article in one step.
 - **Customer portal:** sign-up, requests and replies, ratings, and article suggestions while writing.
 - **Notifications:** a bell with live counts over SignalR, and per-type preferences for in-app and email.
 - **Platform console:** every workspace with plan and usage, suspension, revenue and sign-up charts, and the
