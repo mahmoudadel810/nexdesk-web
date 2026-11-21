@@ -261,6 +261,19 @@ describe('TicketTimeline', () => {
       '@maya patel',
     ]);
   });
+
+  it('opens web addresses in a message as links in a new tab', async () => {
+    const text = '@Maya Patel see Invoices: https://x.test/portal/acme/kb/invoices .';
+    const element = await render([item({ kind: 'Message', body: text })], ['Maya Patel']);
+
+    const body = element.querySelector('.body')!;
+    expect(body.textContent).toBe(text);
+    const link = body.querySelector('a')!;
+    expect(link.getAttribute('href')).toBe('https://x.test/portal/acme/kb/invoices');
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(body.querySelector('.mention')!.textContent).toBe('@Maya Patel');
+  });
 });
 
 describe('ticket helpers', () => {
