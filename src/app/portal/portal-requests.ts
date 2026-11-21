@@ -31,6 +31,7 @@ import { FieldErrorPipe } from '../core/ui/field-error.pipe';
 import { Notifier } from '../core/ui/notifier';
 import { AttachmentPicker } from '../features/tickets/attachment-picker';
 import { FileSizePipe } from '../shared/file-size.pipe';
+import { splitLinks } from '../shared/links';
 import { LocalDatePipe } from '../shared/local-date.pipe';
 import { PortalHelpBrowser, PortalHelpSuggestions } from './portal-kb';
 import { PortalCard } from './portal-shell';
@@ -435,7 +436,15 @@ export class PortalTicketNew {
                 {{ message.createdAt | localDate: 'relative' }}
               </time>
             </header>
-            <p class="body" dir="auto">{{ message.body }}</p>
+            <p class="body" dir="auto">
+              @for (part of links(message.body); track $index) {
+                @if (part.url) {
+                  <a [href]="part.url" target="_blank" rel="noopener noreferrer">{{ part.text }}</a>
+                } @else {
+                  <span>{{ part.text }}</span>
+                }
+              }
+            </p>
             @if (message.attachments.length > 0) {
               <ul class="attachments">
                 @for (attachment of message.attachments; track attachment.id) {
@@ -647,6 +656,7 @@ export class PortalTicket {
 
   readonly id = input.required<string>();
 
+  protected readonly links = splitLinks;
   private readonly slug = this.portal.info()?.slug ?? '';
   protected readonly base = computed(() => `/portal/${this.slug}`);
   protected readonly ticket = signal<Ticket | null>(null);

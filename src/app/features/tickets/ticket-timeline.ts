@@ -4,7 +4,10 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Attachment, TicketsApi, TimelineItem } from '../../core/api/tickets.api';
 import { FileSizePipe } from '../../shared/file-size.pipe';
 import { LocalDatePipe } from '../../shared/local-date.pipe';
+import { splitLinks } from '../../shared/links';
 import { MentionPart, splitMentions } from '../../shared/mentions';
+
+type BodyPart = MentionPart & { readonly url: string | null };
 
 const TRANSLATED_VALUES: Partial<Record<string, string>> = {
   SlaBreached: 'sla.metricNames',
@@ -41,7 +44,11 @@ const TRANSLATED_VALUES: Partial<Record<string, string>> = {
             </header>
             <p class="body" dir="auto">
               @for (part of parts(item.body); track $index) {
-                <span [class.mention]="part.mention">{{ part.text }}</span>
+                @if (part.url) {
+                  <a [href]="part.url" target="_blank" rel="noopener noreferrer">{{ part.text }}</a>
+                } @else {
+                  <span [class.mention]="part.mention">{{ part.text }}</span>
+                }
               }
             </p>
             @if (item.attachments.length > 0) {
@@ -200,8 +207,13 @@ export class TicketTimeline {
   /** Names of the team members whose "@Full Name" is highlighted. */
   readonly mentionable = input<readonly string[]>([]);
 
-  protected parts(body: string | null): MentionPart[] {
-    return body ? splitMentions(body, this.mentionable()) : [];
+  /** Mentions are highlighted, and web addresses in the rest of the text open as links. */
+  protected parts(body: string | null): BodyPart[] {
+    return (body ? splitMentions(body, this.mentionable()) : []).flatMap((part): BodyPart[] =>
+      part.mention
+        ? [{ ...part, url: null }]
+        : splitLinks(part.text).map((link) => ({ ...link, mention: false })),
+    );
   }
 
   protected actorName(item: TimelineItem): string {
