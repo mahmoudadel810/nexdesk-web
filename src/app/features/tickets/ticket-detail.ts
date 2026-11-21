@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DOCUMENT,
   computed,
   effect,
   inject,
@@ -36,16 +37,19 @@ import {
   TicketsApi,
   TimelineItem,
 } from '../../core/api/tickets.api';
+import { KbArticleListItem } from '../../core/api/kb.api';
 import { Team, TeamsApi, User, UsersApi } from '../../core/api/workspace.api';
 import { AuthService } from '../../core/auth/auth.service';
 import { RealtimeService } from '../../core/realtime/realtime.service';
 import { toProblem } from '../../core/http/problem';
 import { Notifier } from '../../core/ui/notifier';
+import { articleUrl, insertArticleLink } from '../../shared/article-links';
 import { Confirm } from '../../shared/confirm-dialog';
 import { LocalDatePipe } from '../../shared/local-date.pipe';
 import { insertMention, mentionCandidates, mentionQuery } from '../../shared/mentions';
 import { Prompt } from '../../shared/prompt-dialog';
 import { SlaStatus } from '../../shared/sla-status';
+import { ArticleLinkDialog } from './article-link-dialog';
 import { AttachmentPicker } from './attachment-picker';
 import { CustomFieldInputs } from './custom-field-inputs';
 import { MergeDialog } from './merge-dialog';
@@ -221,7 +225,15 @@ type ReplyMode = 'reply' | 'note';
               @if (composerError(); as message) {
                 <p class="form-alert" role="alert">{{ message }}</p>
               }
-              <app-attachment-picker [(attachments)]="attachments" />
+              <div class="composer-tools">
+                <app-attachment-picker [(attachments)]="attachments" />
+                @if (canLinkArticles()) {
+                  <button mat-button type="button" (click)="insertArticle(composer)">
+                    <mat-icon aria-hidden="true">menu_book</mat-icon>
+                    {{ 'tickets.articles.insert' | transloco }}
+                  </button>
+                }
+              </div>
               <div class="composer-actions">
                 <mat-form-field appearance="outline" subscriptSizing="dynamic" class="submit-as">
                   <mat-label>{{ 'tickets.composer.submitAs' | transloco }}</mat-label>
@@ -441,6 +453,13 @@ type ReplyMode = 'reply' | 'note';
       justify-self: start;
     }
 
+    .composer-tools {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
     .composer-actions {
       display: flex;
       flex-wrap: wrap;
@@ -515,6 +534,7 @@ export class TicketDetail {
   private readonly router = inject(Router);
   private readonly prompt = inject(Prompt);
   private readonly dialog = inject(MatDialog);
+  private readonly document = inject(DOCUMENT);
 
   readonly id = input.required<string>();
 
@@ -564,6 +584,9 @@ export class TicketDetail {
   protected readonly canEdit = computed(() => this.auth.can('tickets.edit'));
   protected readonly canReply = computed(() => this.auth.can('tickets.reply'));
   protected readonly canDelete = computed(() => this.auth.can('tickets.delete'));
+  protected readonly canLinkArticles = computed(
+    () => this.auth.can('kb.view') && !!this.auth.session()?.tenant,
+  );
 
   /** Active agents, plus the current assignee even if they have since been deactivated. */
   protected readonly agentOptions = computed(() => {
@@ -680,6 +703,32 @@ export class TicketDetail {
       composer.setSelectionRange(caret, caret);
       this.trackCaret(composer);
     });
+  }
+
+  protected insertArticle(composer: HTMLTextAreaElement): void {
+    const tenant = this.auth.session()?.tenant;
+    if (!tenant) {
+      return;
+    }
+
+    const caret = composer.selectionStart;
+    this.dialog
+      .open<ArticleLinkDialog, void, KbArticleListItem>(ArticleLinkDialog, {
+        width: '560px',
+        restoreFocus: false,
+      })
+      .afterClosed()
+      .pipe(filter((article): article is KbArticleListItem => !!article))
+      .subscribe((article) => {
+        const url = articleUrl(this.document.location.origin, tenant.slug, article.slug);
+        const result = insertArticleLink(this.body(), caret, article.title, url);
+        this.body.set(result.text);
+        // Written straight away as well, so the caret can be placed before the next change detection.
+        composer.value = result.text;
+        composer.focus();
+        composer.setSelectionRange(result.caret, result.caret);
+        this.trackCaret(composer);
+      });
   }
 
   protected send(ticket: Ticket): void {

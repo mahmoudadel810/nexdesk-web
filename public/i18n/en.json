@@ -617,6 +617,13 @@
       "none": "None",
       "missing": "Fill in the required fields: {{fields}}"
     },
+    "articles": {
+      "insert": "Insert article",
+      "title": "Link a help article",
+      "search": "Search published articles",
+      "results": "Published articles",
+      "noResults": "No published article matches."
+    },
     "merge": {
       "open": "Merge into another ticket",
       "title": "Merge ticket #{{number}}",
